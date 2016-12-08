@@ -58,6 +58,7 @@ public class AccelerometerDataProvider implements SensorEventListener
         accxf = accfilterx.filter(accx);
         accyf = accfiltery.filter(accy);
         acczf = accfilterz.filter(accz);
+        //TODO: WRONG CALCULATIONS
         acceleration = sqrt(pow(accx,2) + pow(accy,2) + pow(accz,2));
         filteredacceleration = sqrt(pow(accxf,2) + pow(accyf,2) + pow(acczf,2));
     }

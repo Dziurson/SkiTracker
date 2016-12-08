@@ -13,6 +13,7 @@ public class KalmanFilter
         this.q = q;
         this.r = r;
     }
+
     public double filter(double d)
     {
         k = (p + q) / (p + q + r);
@@ -20,10 +21,12 @@ public class KalmanFilter
         x = x + (d - x) * k;
         return x;
     }
+
     public void setStartValue(double x)
     {
         this.x = x;
     }
+
     public boolean isXEqualToZero()
     {
         return (x == 0);

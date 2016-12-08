@@ -89,10 +89,10 @@ public class GPSDataProvider implements LocationListener
             //If accelerometer is not available and two previous locations are not null, acceleration is calculate using dV/dt
             if ((velocity != null) && (velocity_prev != null) && ((!Properties.isAccelerometerAvailable) || (!Properties.isAccelerometerEnabled)))
             {
-                acceleration = (velocity.getVelocity() - velocity_prev.getVelocity()) / ((velocity.getTime() - velocity_prev.getTime()) / 1000);
+                acceleration = (velocity.getVelocityInMps() - velocity_prev.getVelocityInMps()) / ((velocity.getTime() - velocity_prev.getTime()) / 1000);
             }
-            sender.Update_Fields(velocity.getVelocity(), getAcceleration(), this.rawLocationData.getLatitude(), this.rawLocationData.getLongitude());
-            sender.SaveFilteredData(filteredVelocity.getVelocity(),getAcceleration(),filteredLocation.getLatitude(),filteredLocation.getLongitude(),filteredLocation.getTime());
+            sender.Update_Fields(velocity.getVelocityInMps(), getAcceleration(), this.rawLocationData.getLatitude(), this.rawLocationData.getLongitude());
+            sender.SaveFilteredData(filteredVelocity.getVelocityInMps(),getAcceleration(),filteredLocation.getLatitude(),filteredLocation.getLongitude(),filteredLocation.getTime());
         }
     }
 
