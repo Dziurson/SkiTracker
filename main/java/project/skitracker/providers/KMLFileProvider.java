@@ -7,6 +7,7 @@ import project.skitracker.settings.Properties;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 
 public class KMLFileProvider
 {
@@ -22,7 +23,8 @@ public class KMLFileProvider
     {
         mainActivity = sender;
     }
-    public boolean OpenFile(String filename)
+
+    public boolean OpenFile(String filename) //TODO: Modify section LookAt
     {
         try
         {
@@ -44,7 +46,7 @@ public class KMLFileProvider
                     "       <extrude>1</extrude>\n" +
                     "       <gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n" +
                     "       <coordinates>\n");
-            Properties.isKmlFileOpened = true;
+            Properties.is_kml_file_opened = true;
             return true;
         }
         catch (Exception e)
@@ -64,9 +66,19 @@ public class KMLFileProvider
             return false;
         }
     }
+    public synchronized void AppendAllCoordinates(ArrayList<String> list)
+    {
+        if (list != null)
+        {
+            for (int i = 0; i < list.size(); i++)
+            {
+                AppendFile(list.get(i));
+            }
+        }
+    }
     public boolean CloseFile()
     {
-        Properties.isKmlFileOpened = false;
+        Properties.is_kml_file_opened = false;
         try
         {
             AppendFile("        </coordinates>\n" +

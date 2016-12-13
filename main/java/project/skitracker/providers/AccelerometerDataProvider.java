@@ -55,12 +55,11 @@ public class AccelerometerDataProvider implements SensorEventListener
         accx = sensorEvent.values[0];
         accy = sensorEvent.values[1];
         accz = sensorEvent.values[2];
-        accxf = accfilterx.filter(accx);
-        accyf = accfiltery.filter(accy);
-        acczf = accfilterz.filter(accz);
-        //TODO: WRONG CALCULATIONS
-        acceleration = sqrt(pow(accx,2) + pow(accy,2) + pow(accz,2));
-        filteredacceleration = sqrt(pow(accxf,2) + pow(accyf,2) + pow(acczf,2));
+        accxf = accfilterx.filterSingleValue(accx);
+        accyf = accfiltery.filterSingleValue(accy);
+        acczf = accfilterz.filterSingleValue(accz);
+        acceleration = sqrt(pow(accx,2) + pow(accy,2) + pow(accz,2)) - Properties.GRAVITY_VALUE;
+        filteredacceleration = sqrt(pow(accxf,2) + pow(accyf,2) + pow(acczf,2)) - Properties.GRAVITY_VALUE;
     }
 
     @Override

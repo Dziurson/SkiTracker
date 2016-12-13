@@ -16,7 +16,7 @@ public class Velocity
         this.t = t;
     }
 
-    public double getVelocityInMps()
+    public double getVelocity()
     {
         return v;
     }

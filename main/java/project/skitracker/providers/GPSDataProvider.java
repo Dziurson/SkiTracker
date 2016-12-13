@@ -10,45 +10,42 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import project.skitracker.MainActivity;
+import project.skitracker.models.SplineInterpolation;
 import project.skitracker.settings.Properties;
 import project.skitracker.data.Velocity;
 import project.skitracker.models.KalmanFilter;
-
+import java.util.ArrayList;
 import static java.lang.Math.abs;
 
 /*
-    GPSDataProvider, actually using only GPS signal.
-    This class can only be instantioned once - Singleton design pattern used.
-    It run as a service listening to GPS updates.
+    GPSDataProvider, using only GPS signal.
+    This class can only be created once, as it is working as a LocationListener service.
+    This service is listening to GPS updates.
 */
 
 public class GPSDataProvider implements LocationListener
 {
     private static GPSDataProvider instance = null;
     private MainActivity sender;
-    @Deprecated
-    private KalmanFilter gpsKalmanLongitudeFilter;
-    @Deprecated
-    private KalmanFilter gpsKalmanLatitudeFilter;
+    private KalmanFilter longitude_filtration;
+    private KalmanFilter latitude_filtration;
     private LocationManager location_manager;
-
-    private Location rawLocationData;
-    private Location rawLocationDataPrev;
-    private Location filteredLocation;
-    private Location filteredLocationPrev;
+    private SplineInterpolation longitude_interpolation;
+    private SplineInterpolation latitude_interpolation;
+    private Location location_data;
+    private Location location_data_prev;
     private Velocity velocity;
     private Velocity velocity_prev;
-    private Velocity filteredVelocity;
-    private Velocity filteredVelocityPrev;
-
     private double acceleration = 0;
 
     private GPSDataProvider(MainActivity sender)
     {
         this.sender = sender;
+        longitude_interpolation = new SplineInterpolation();
+        latitude_interpolation = new SplineInterpolation();
         location_manager = (LocationManager) this.sender.getSystemService(Context.LOCATION_SERVICE);
-        gpsKalmanLongitudeFilter = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
-        gpsKalmanLatitudeFilter = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
+        longitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
+        latitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
         enableGPSRequests();
     }
 
@@ -58,59 +55,87 @@ public class GPSDataProvider implements LocationListener
         return instance;
     }
 
+    /*
+        onLocationChanged is the most important method. It is invoked when location have been changed.
+        This method invokes saveLocationDataArrayToInterpolatedKmlFile to save data into file.
+        It is also saving two previous Locations velocities and acceleration.
+     */
+
     @Override
     public void onLocationChanged(Location location)
     {
         synchronized (this)
         {
-            if (gpsKalmanLongitudeFilter.isXEqualToZero())
-            {
-                gpsKalmanLongitudeFilter.setStartValue(location.getLongitude());
-            }
-            if (gpsKalmanLatitudeFilter.isXEqualToZero())
-            {
-                gpsKalmanLatitudeFilter.setStartValue(location.getLatitude());
-            }
-
-            //Storing raw and filtered data to test.
-            rawLocationDataPrev = this.rawLocationData;
-            filteredLocationPrev = filteredLocation;
-            this.rawLocationData = location;
-            filteredLocation = new Location(location);
-            filteredLocation.setLatitude(gpsKalmanLatitudeFilter.filter(location.getLatitude()));
-            filteredLocation.setLongitude(gpsKalmanLongitudeFilter.filter(location.getLongitude()));
+            //Storing two location data points.
+            location_data_prev = this.location_data;
+            this.location_data = location;
 
             //Velocity is calculated using Location time and distance between points using ds/dt
             velocity_prev = velocity;
-            filteredVelocityPrev = filteredVelocity;
-            velocity = new Velocity(getVelocityFromGPS(), location.getTime());
-            filteredVelocity = new Velocity(getFilteredVelocityFromGPS(),location.getTime());
+            velocity = new Velocity(calculateVelocity(), location.getTime());
 
             //If accelerometer is not available and two previous locations are not null, acceleration is calculate using dV/dt
             if ((velocity != null) && (velocity_prev != null) && ((!Properties.isAccelerometerAvailable) || (!Properties.isAccelerometerEnabled)))
             {
-                acceleration = (velocity.getVelocityInMps() - velocity_prev.getVelocityInMps()) / ((velocity.getTime() - velocity_prev.getTime()) / 1000);
+                acceleration = calculateAcceleration();
             }
-            sender.Update_Fields(velocity.getVelocityInMps(), getAcceleration(), this.rawLocationData.getLatitude(), this.rawLocationData.getLongitude());
-            sender.SaveFilteredData(filteredVelocity.getVelocityInMps(),getAcceleration(),filteredLocation.getLatitude(),filteredLocation.getLongitude(),filteredLocation.getTime());
+
+            ArrayList<Double> longitude_list = longitude_interpolation.calculateNewSpline(this.location_data.getLongitude());
+            ArrayList<Double> latitude_list = latitude_interpolation.calculateNewSpline(this.location_data.getLatitude());
+            ArrayList<String> location_list = new ArrayList<>();
+
+            if ((longitude_list != null) && (latitude_list != null))
+            {
+                for(int i = 0; i < latitude_list.size(); i++)
+                {
+                    location_list.add(longitude_list.get(i).toString() + "," + latitude_list.get(i).toString());
+                }
+            }
+
+            if(!Properties.isFiltrationEnabled) sender.saveLocationDataArrayToInterpolatedKmlFile(location_list);
+            else
+            {
+                if ((longitude_list != null) && (latitude_list != null))
+                {
+                    if (latitude_filtration.isXEqualToZero())
+                    {
+                        latitude_filtration.setStartValue(latitude_list.get(0));
+                    }
+                    if (longitude_filtration.isXEqualToZero())
+                    {
+                        longitude_filtration.setStartValue(longitude_list.get(0));
+                    }
+                    ArrayList<Double> filtered_longitude_list = longitude_filtration.filterArrayOfValues(longitude_list);
+                    ArrayList<Double> filtered_latitude_list = latitude_filtration.filterArrayOfValues(latitude_list);
+                    ArrayList<String> filtered_location_list = new ArrayList<String>();
+                    for (int i = 0; i < filtered_longitude_list.size(); i++)
+                    {
+                        filtered_location_list.add(filtered_longitude_list.get(i).toString() + "," + filtered_latitude_list.get(i).toString());
+                    }
+                    sender.saveLocationDataArrayToInterpolatedKmlFile(filtered_location_list);
+                }
+            }
+
+            sender.updateTextViews(getVelocity(), getAcceleration(), getLatitude(), getLongitude());
         }
     }
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle)
     {
-    } //TODO: Dodac wlaczanie/wylaczanie nadajnika
+    }
 
     @Override
     public void onProviderEnabled(String s)
     {
-    }
+
+    } //TODO: Dodac wlaczanie locationmanagera
 
     @Override
     public void onProviderDisabled(String s)
     {
 
-    }
+    } //TODO: zerowanie punktow interpolacji i filtracji, wylaczanie location managera
 
     public void enableGPSRequests()
     {
@@ -152,26 +177,38 @@ public class GPSDataProvider implements LocationListener
         }
     }
 
-    public double getVelocityFromGPS()
+    private double calculateVelocity()
     {
-        //TODO: Change for filter data, odleglosc ze wzorku
-        if((rawLocationData != null) && (rawLocationDataPrev != null))
+        if((location_data != null) && (location_data_prev != null))
         {
-            return abs(rawLocationData.distanceTo(rawLocationDataPrev))/((rawLocationData.getTime() - rawLocationDataPrev.getTime())/1000);
-        }
-        else return 0;
-    }
-    public double getFilteredVelocityFromGPS()
-    {
-        if((filteredLocation != null) && (filteredLocationPrev != null))
-        {
-            return abs(filteredLocation.distanceTo(filteredLocationPrev))/((filteredLocation.getTime() - filteredLocationPrev.getTime())/1000);
+            return abs(location_data.distanceTo(location_data_prev))/((location_data.getTime() - location_data_prev.getTime())/1000);
         }
         else return 0;
     }
 
+    private double calculateAcceleration()
+    {
+        return (velocity.getVelocity() - velocity_prev.getVelocity()) / ((velocity.getTime() - velocity_prev.getTime()) / 1000);
+    }
+
+    public double getVelocityInKPH()
+    {
+        return velocity.getVelocityInKph();
+    }
+    public double getVelocity()
+    {
+        return velocity.getVelocity();
+    }
     public double getAcceleration()
     {
         return acceleration;
+    }
+    public double getLongitude()
+    {
+        return this.location_data.getLongitude();
+    }
+    public double getLatitude()
+    {
+        return this.location_data.getLatitude();
     }
 }

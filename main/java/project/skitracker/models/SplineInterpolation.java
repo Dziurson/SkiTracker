@@ -9,7 +9,7 @@ public class SplineInterpolation
 {
 
     private ArrayList<Double> values;
-    private final int element_count = 20;
+    private static final int element_count = 10;
     private double m1,m2,d[],a[],step;
     public SplineInterpolation()
     {
@@ -65,24 +65,10 @@ public class SplineInterpolation
         a[2] = m1/2.0;
         a[3] = (m2 - m1)/6.0;
 
-        ArrayList<Double> ret_list = new ArrayList<Double>();
+        ArrayList<Double> ret_list = new ArrayList<>();
         for (int i = 0; i < element_count; i++)
         {
             ret_list.add(a[0] + a[1] * (step * i) + a[2] * pow(step * i,2) + a[3] * pow(step * i,3));
-        }
-        return ret_list;
-    }
-
-    public ArrayList<Double> filterInterpolationData(ArrayList<Double> data, KalmanFilter filter)
-    {
-        ArrayList<Double> ret_list = new ArrayList<>();
-        if (filter.isXEqualToZero())
-        {
-            filter.setStartValue(data.get(0));
-        }
-        for(double d : data)
-        {
-            ret_list.add(filter.filter(d));
         }
         return ret_list;
     }
