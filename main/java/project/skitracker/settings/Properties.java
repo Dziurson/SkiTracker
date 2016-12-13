@@ -9,11 +9,12 @@ public class Properties
     public static boolean isAccelerometerAvailable = false;
     public static boolean isAccelerometerEnabled = false;
     public static boolean isFirstGPSUpdate = true;
-    public volatile static boolean isKmlFileOpened = false;
-    public static int minDistanceBetweenGPSUpdates = 2;
+    public static boolean isFiltrationEnabled = true;
+    public volatile static boolean is_kml_file_opened = false;
+    public static int minDistanceBetweenGPSUpdates = 5;
     public static int minTimeBetweenGPSUpdates = 1000;
-    public static double gpsKalmanFilterQvalue = 0.00003;
-    public static double gpsKalmanFilterRvalue = 0.005;
+    public static double gpsKalmanFilterQvalue = 0.0001;
+    public static double gpsKalmanFilterRvalue = 0.001;
     public static boolean gps_permission_granted = false;
     public static boolean external_storage_write_permission_granted = false;
     public static final int MY_PERMISSIONS_REQUEST_COARSE_AND_FINE_LOCATION_TURN_ON = 100;
