@@ -37,22 +37,16 @@ public class MainActivity extends AppCompatActivity
 {
     //Fields that represents movement data (velocity, acceleration, longitude, latitude).
     private TextView szerokosc_textview, dlugosc_textview, predkosc_textview, acceleration_textview;
-
     //Progressbars graphically shows velocity and acceleration
     private ProgressBar velocity_bar, acceleration_bar;
-
     //Small button turns on/off recording
     private FloatingActionButton recording_button;
-
     //Two kml file providers - one for raw data, one for interpolated data
     private KMLFileProvider kml_raw_file_provider, kml_interpolated_file_generator;
-
     //This Object implements LocationListener and SensorListener Interfaces. Provides GPS and Accelerometer data.
     private GPSDataProvider movement_tracker;
-
     //Two data formatters, one for Longitude and Latitude, second for Velocity and Acceleration.
     private DecimalFormat coordinates_format, av_format;
-
     //Date provider - used for kml filename.
     private Calendar calendar;
 
@@ -79,23 +73,23 @@ public class MainActivity extends AppCompatActivity
                     {
                         calendar = Calendar.getInstance();
                         String filename = calendar.getTime().toString() + calendar.getTimeInMillis() + ".kml";
-                        String filenamefiltered = calendar.getTime().toString() + calendar.getTimeInMillis() + "filtered.kml";
-                        if (kml_raw_file_provider.OpenFile(filename))
+                        String filename_filtered = calendar.getTime().toString() + calendar.getTimeInMillis() + "filtered.kml";
+                        if (kml_raw_file_provider.openFile(filename))
                         {
-                            if(kml_interpolated_file_generator.OpenFile(filenamefiltered)) Snackbar.make(view, "Rozpoczęto zapis.", Snackbar.LENGTH_LONG).show();
+                            if(kml_interpolated_file_generator.openFile(filename_filtered)) Snackbar.make(view, getResources().getString(R.string.file_writing_started), Snackbar.LENGTH_LONG).show();
                             else
                             {
-                                Snackbar.make(view, "Coś poszło nie tak.", Snackbar.LENGTH_LONG).show();
-                                kml_raw_file_provider.CloseFile();
+                                Snackbar.make(view, getResources().getString(R.string.file_error_message), Snackbar.LENGTH_LONG).show();
+                                kml_raw_file_provider.closeFile();
                             }
                         }
-                        else Snackbar.make(view, "Coś poszło nie tak.", Snackbar.LENGTH_LONG).show();
+                        else Snackbar.make(view, getResources().getString(R.string.file_error_message), Snackbar.LENGTH_LONG).show();
                     }
                     else
                     {
-                        kml_raw_file_provider.CloseFile();
-                        kml_interpolated_file_generator.CloseFile();
-                        Snackbar.make(view, "Zakończono zapisywanie.", Snackbar.LENGTH_LONG).show();
+                        kml_raw_file_provider.closeFile();
+                        kml_interpolated_file_generator.closeFile();
+                        Snackbar.make(view, getResources().getString(R.string.file_writing_ended), Snackbar.LENGTH_LONG).show();
                     }
                     changeFabStyle(Properties.is_kml_file_opened);
                 }
@@ -154,13 +148,13 @@ public class MainActivity extends AppCompatActivity
         updateSingleTextView(acceleration_textview,av_format.format(a).toString() + " m/s^2");
         updateProgressBar(velocity_bar,v*3.6);
         updateProgressBar(acceleration_bar,a*10+40);
-        if (Properties.is_kml_file_opened) kml_raw_file_provider.AppendFile(dlug + "," + szer + " <!-- v = " + v + ", a = " + a + "-->\n");
+        if (Properties.is_kml_file_opened) kml_raw_file_provider.addCoordinates(dlug + "," + szer + " <!-- v = " + v*3.6 + ", a = " + a + "-->");
     }
 
     //Saving array of strings to kml_interpolated_file_generator file
     public synchronized void saveLocationDataArrayToInterpolatedKmlFile(ArrayList<String> str)
     {
-        if(Properties.is_kml_file_opened) kml_interpolated_file_generator.AppendAllCoordinates(str);
+        if(Properties.is_kml_file_opened) kml_interpolated_file_generator.addAllCoordinates(str);
     }
 
     // Function used to fill data from Accelerometer.
@@ -198,9 +192,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
+        if (id == R.id.action_open_map)
         {
             Intent intent = new Intent(this,MapsActivity.class);
+            startActivity(intent);
+        }
+        if (id == R.id.action_settings)
+        {
+            Intent intent = new Intent(this,SettingsActivity.class);
             startActivity(intent);
         }
 

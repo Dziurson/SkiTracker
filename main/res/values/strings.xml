@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">SkiTracker</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="menu_item_map">Mapa</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="menu_item_settings">Ustawienia</string>
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="file_error_message">Coś poszło nie tak.</string>
+    <string name="file_writing_started">Rozpoczęto zapis.</string>
+    <string name="file_writing_ended">Zakończono zapisywanie.</string>
 </resources>

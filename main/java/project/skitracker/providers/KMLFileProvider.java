@@ -17,35 +17,35 @@ public class KMLFileProvider
 
     public KMLFileProvider(MainActivity sender)
     {
-        Initialize(sender);
+        initialize(sender);
     }
-    private void Initialize(MainActivity sender)
+    private void initialize(MainActivity sender)
     {
         mainActivity = sender;
     }
 
-    public boolean OpenFile(String filename) //TODO: Modify section LookAt
+    public boolean openFile(String filename) //TODO: Modify section LookAt
     {
         try
         {
             kmlFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
             fout = new FileWriter(kmlFile);
-            fout.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            fout.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\"\n" + " xmlns:gx=\"http://www.google.com/kml/ext/2.2\">\n");
-            fout.append("<Placemark>\n" +
-                    "   <name>gx:altitudeMode Example</name>\n" +
-                    "   <LookAt>\n" +
-                    "       <longitude>146.806</longitude>\n" +
-                    "       <latitude>12.219</latitude>\n" +
-                    "       <heading>-60</heading>\n" +
-                    "       <tilt>70</tilt>\n" +
-                    "       <range>6300</range>\n" +
-                    "       <gx:altitudeMode>clampToSeaFloor</gx:altitudeMode>\n" +
-                    "  </LookAt>\n" +
-                    "  <LineString>\n" +
-                    "       <extrude>1</extrude>\n" +
-                    "       <gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n" +
-                    "       <coordinates>\n");
+            fout.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
+            fout.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\"\r\n" + " xmlns:gx=\"http://www.google.com/kml/ext/2.2\">\r\n");
+            fout.append("<Placemark>\r\n" +
+                    "   <name>gx:altitudeMode Example</name>\r\n" +
+                    "   <LookAt>\r\n" +
+                    "       <longitude>146.806</longitude>\r\n" +
+                    "       <latitude>12.219</latitude>\r\n" +
+                    "       <heading>-60</heading>\r\n" +
+                    "       <tilt>70</tilt>\r\n" +
+                    "       <range>6300</range>\r\n" +
+                    "       <gx:altitudeMode>clampToSeaFloor</gx:altitudeMode>\r\n" +
+                    "  </LookAt>\r\n" +
+                    "  <LineString>\r\n" +
+                    "       <extrude>1</extrude>\r\n" +
+                    "       <gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\r\n" +
+                    "       <coordinates>\r\n");
             Properties.is_kml_file_opened = true;
             return true;
         }
@@ -54,11 +54,11 @@ public class KMLFileProvider
             return false;
         }
     }
-    public synchronized boolean AppendFile(String s)
+    public synchronized boolean addCoordinates(String s)
     {
         try
         {
-            fout.append("           " + s);
+            fout.append("           " + s + "\r\n");
             return true;
         }
         catch(Exception e)
@@ -66,25 +66,25 @@ public class KMLFileProvider
             return false;
         }
     }
-    public synchronized void AppendAllCoordinates(ArrayList<String> list)
+    public synchronized void addAllCoordinates(ArrayList<String> list)
     {
         if (list != null)
         {
             for (int i = 0; i < list.size(); i++)
             {
-                AppendFile(list.get(i));
+                addCoordinates(list.get(i));
             }
         }
     }
-    public boolean CloseFile()
+    public boolean closeFile()
     {
         Properties.is_kml_file_opened = false;
         try
         {
-            AppendFile("        </coordinates>\n" +
-                    "   </LineString>\n" +
-                    "</Placemark>\n" +
-                    "\n" +
+            addCoordinates("        </coordinates>\r\n" +
+                    "   </LineString>\r\n" +
+                    "</Placemark>\r\n" +
+                    "\r\n" +
                     "</kml>");
             fout.flush();
             fout.close();

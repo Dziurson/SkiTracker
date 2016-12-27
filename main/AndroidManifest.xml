@@ -48,6 +48,17 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="project.skitracker.MainActivity"/>
         </activity>
+
+        <activity
+                android:name=".SettingsActivity"
+                android:label="@string/title_activity_settings"
+                android:parentActivityName=".MainActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="project.skitracker.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>
