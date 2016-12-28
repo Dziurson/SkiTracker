@@ -19,6 +19,8 @@ import android.widget.TextView;
 import project.skitracker.providers.KMLFileProvider;
 import project.skitracker.providers.GPSDataProvider;
 import project.skitracker.settings.Properties;
+
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +35,8 @@ import static java.lang.Math.round;
 //TODO: KMLFILEPROVIDER extends FILEPROVIDER and ACCELERATIONFILEPROVIDER extends FILEPROVIDER
 //TODO: CHECK IF THERE ARE ANY! MULTITHREAD CONFLICTS ( USE VOLATILE AND SYNCHRONIZED )
 //TODO: IF TIME BETWEEN LOCATION UPDATES EXCEEDS (5-15s) SET KALMANFILTER X TO LOCATION VALUE (ALSO INTERPOLATION SHOULD BE STOPPED!!
-public class MainActivity extends AppCompatActivity
+//TODO: ADD CHECK FOR PROPETIES VALUE CHANGES
+public class MainActivity extends AppCompatActivity implements Serializable
 {
     //Fields that represents movement data (velocity, acceleration, longitude, latitude).
     private TextView szerokosc_textview, dlugosc_textview, predkosc_textview, acceleration_textview;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     //Two kml file providers - one for raw data, one for interpolated data
     private KMLFileProvider kml_raw_file_provider, kml_interpolated_file_generator;
     //This Object implements LocationListener and SensorListener Interfaces. Provides GPS and Accelerometer data.
-    private GPSDataProvider movement_tracker;
+    GPSDataProvider movement_tracker;
     //Two data formatters, one for Longitude and Latitude, second for Velocity and Acceleration.
     private DecimalFormat coordinates_format, av_format;
     //Date provider - used for kml filename.

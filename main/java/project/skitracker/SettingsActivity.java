@@ -3,6 +3,7 @@ package project.skitracker;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -10,6 +11,7 @@ import project.skitracker.settings.Properties;
 
 public class SettingsActivity extends AppCompatActivity
 {
+    private MainActivity sender;
     private EditText update_interval_field;
     private EditText update_delay_field;
     private EditText sigma_value_field;
@@ -56,7 +58,140 @@ public class SettingsActivity extends AppCompatActivity
 
     private void enableListeners()
     {
+        update_interval_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+            {
+                update_interval_field.setText(((Integer)update_interval_bar.getProgress()).toString());
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+                Properties.minDistanceBetweenGPSUpdates = update_interval_bar.getProgress();
+            }
+        });
+
+        update_delay_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+            {
+                update_delay_field.setText(((Integer)(Properties.minTimeBetweenGPSUpdates/1000)).toString());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+                Properties.minTimeBetweenGPSUpdates = update_delay_bar.getProgress()*1000;
+            }
+        });
+
+        sigma_value_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+            {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+        });
+
+        ro_value_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+            {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+        });
+
+        kalman_filtration_switch.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
+
+        update_interval_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean has_focus)
+            {
+                if(!has_focus)
+                {
+                    String field_value = update_interval_field.getText().toString();
+                    if(field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
+                    {
+                        Properties.minDistanceBetweenGPSUpdates = (int)(Double.parseDouble(field_value));
+                    }
+                    else
+                    {
+                        Properties.minDistanceBetweenGPSUpdates = 5;
+                    }
+                    update_interval_bar.setProgress(Properties.minDistanceBetweenGPSUpdates);
+                }
+            }
+        });
+
+        update_delay_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean has_focus)
+            {
+                if(!has_focus)
+                {
+                    String field_value = update_delay_field.getText().toString();
+                    if(field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
+                    {
+                        Properties.minTimeBetweenGPSUpdates = (int)(Double.parseDouble(field_value)*1000);
+                    }
+                    else
+                    {
+                        Properties.minTimeBetweenGPSUpdates = 1000;
+                    }
+                    update_delay_bar.setProgress(Properties.minTimeBetweenGPSUpdates/1000);
+                }
+            }
+        });
     }
 
 }

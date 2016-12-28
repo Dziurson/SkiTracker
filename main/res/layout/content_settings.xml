@@ -29,8 +29,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
                 android:gravity="center">
 
 
@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/kalman_filtration_switch"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:textColor="#737373"/>
 
         </LinearLayout>
@@ -59,11 +59,11 @@
 
             <TextView
                     android:layout_width="10dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:text="Odstęp aktualizacji:"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:ems="10"
                     android:id="@+id/TextView03"
                     android:gravity = "center"
@@ -71,25 +71,24 @@
 
             <EditText
                     android:layout_width="0dp"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.4"
                     android:layout_height="50dp"
                     android:inputType="textPersonName"
                     android:text="5"
                     android:ems="10"
-                    android:textSize="25sp"
+                    android:textSize="17sp"
                     android:id="@+id/update_interval_field"
                     android:gravity = "center"
                     android:textColor="#737373"/>
 
-            <SeekBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/update_interval_bar"
-                    android:max="10"
-                    android:layout_weight="0.2" />
-
-
         </LinearLayout>
+
+        <SeekBar
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:id="@+id/update_interval_bar"
+                android:max="10"
+                android:layout_weight="0.2" />
 
 
         <LinearLayout
@@ -106,36 +105,38 @@
 
             <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:text="Czas aktualizacji:"
                     android:ems="10"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:id="@+id/TextView04"
                     android:gravity = "center"
                     android:layout_marginRight="10dp"/>
 
             <EditText
                     android:layout_width="0dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.4"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:text="1000"
                     android:ems="10"
-                    android:textSize="25sp"
+                    android:textSize="17sp"
                     android:id="@+id/update_delay_field"
                     android:gravity = "center"
                     android:textColor="#737373"/>
 
-            <SeekBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/update_delay_bar"
-                    android:max="10"
-                    android:layout_weight="0.2" />
 
         </LinearLayout>
+
+        <SeekBar
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:id="@+id/update_delay_bar"
+                android:max="10"
+                android:layout_weight="0.2" />
+
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -152,37 +153,37 @@
 
             <TextView
                     android:layout_width="10dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:text="Wartość Σ:"
                     android:ems="10"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:id="@+id/TextView05"
                     android:gravity = "center"
                     android:layout_marginRight="10dp"/>
 
             <EditText
                     android:layout_width="0dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.4"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:text="0.0001"
                     android:ems="10"
-                    android:textSize="25sp"
+                    android:textSize="17sp"
                     android:id="@+id/sigma_value_field"
-                    android:gravity = "left"
+                    android:gravity = "center"
                     android:textColor="#737373"/>
 
-            <SeekBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/sigma_value_bar"
-                    android:max="100"
-                    android:layout_weight="0.2" />
 
         </LinearLayout>
 
+        <SeekBar
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:id="@+id/sigma_value_bar"
+                android:max="100"
+                android:layout_weight="0.2" />
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -198,35 +199,36 @@
 
             <TextView
                     android:layout_width="10dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:text="Wartość ρ:"
                     android:ems="10"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:id="@+id/TextView06"
                     android:gravity = "center"
                     android:layout_marginRight="10dp"/>
 
             <EditText
                     android:layout_width="0dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.4"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:text="0.001"
                     android:ems="10"
-                    android:textSize="25sp"
+                    android:textSize="17sp"
                     android:id="@+id/ro_value_field"
                     android:gravity = "center"
                     android:textColor="#737373"/>
 
-            <SeekBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ro_value_bar"
-                    android:max="100"
-                    android:layout_weight="0.2" />
-
         </LinearLayout>
+
+        <SeekBar
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:id="@+id/ro_value_bar"
+                android:max="100"
+                android:layout_weight="0.2" />
+
     </LinearLayout>
 </RelativeLayout>
