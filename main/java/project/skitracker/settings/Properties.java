@@ -24,6 +24,4 @@ public class Properties
     public static final double MINIMAL_ACCELERATION_CHANGE = 0.1;
     public static final double MINIMAL_ACCELERATION = 0.1;
     public static final double GRAVITY_VALUE = 9.81;
-    public static final String COORDINATES_FORMAT = "##0.00000";
-    public static final String ACCELERATION_AND_VELOCITY_FORMAT = "##0.000";
 }

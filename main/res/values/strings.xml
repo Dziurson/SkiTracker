@@ -7,4 +7,6 @@
     <string name="file_error_message">Coś poszło nie tak.</string>
     <string name="file_writing_started">Rozpoczęto zapis.</string>
     <string name="file_writing_ended">Zakończono zapisywanie.</string>
+    <string name="coordinates_format">##0.00000</string>
+    <string name="acceleration_and_velocity_format">##0.0</string>
 </resources>

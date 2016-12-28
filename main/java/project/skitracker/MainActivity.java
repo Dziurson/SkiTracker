@@ -134,8 +134,8 @@ public class MainActivity extends AppCompatActivity
         predkosc_textview = (TextView) findViewById(R.id.predkosc_view_t);
         acceleration_textview = (TextView) findViewById(R.id.acc_view_t);
         recording_button = (FloatingActionButton) findViewById(R.id.fab);
-        coordinates_format = new DecimalFormat(Properties.COORDINATES_FORMAT);
-        av_format = new DecimalFormat(Properties.ACCELERATION_AND_VELOCITY_FORMAT);
+        coordinates_format = new DecimalFormat(getResources().getString(R.string.coordinates_format));
+        av_format = new DecimalFormat(getResources().getString(R.string.acceleration_and_velocity_format));
         movement_tracker = GPSDataProvider.getInstance(this);
     }
 
