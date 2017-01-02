@@ -4,9 +4,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.TextView;
 
-/**
- * Created by jakub on 28.12.2016.
- */
+//to remove
+@Deprecated
 public abstract class TextOnChangedListener<T extends TextView> implements TextWatcher
 {
     private T target;

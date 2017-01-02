@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity
         update_delay_field.setText(((Integer)Properties.minTimeBetweenGPSUpdates).toString());
         sigma_value_field.setText(((Double)Properties.gpsKalmanFilterQvalue).toString());
         ro_value_field.setText(((Double)Properties.gpsKalmanFilterRvalue).toString());
-        sigma_value_bar.setProgress((int)(Properties.gpsKalmanFilterQvalue*100000));
+        sigma_value_bar.setProgress((int)(Properties.gpsKalmanFilterQvalue*10000));
         ro_value_bar.setProgress((int)(Properties.gpsKalmanFilterRvalue*1000));
         kalman_filtration_switch.setChecked(Properties.isFiltrationEnabled);
         update_interval_bar.setProgress(Properties.minDistanceBetweenGPSUpdates);
