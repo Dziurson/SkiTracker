@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import project.skitracker.settings.Properties;
 
 public class SettingsActivity extends AppCompatActivity
@@ -50,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity
         sigma_value_field.setText(((Double)Properties.gpsKalmanFilterQvalue).toString());
         ro_value_field.setText(((Double)Properties.gpsKalmanFilterRvalue).toString());
         sigma_value_bar.setProgress((int)(Properties.gpsKalmanFilterQvalue*100000));
-        ro_value_bar.setProgress((int)(Properties.gpsKalmanFilterRvalue*10000));
+        ro_value_bar.setProgress((int)(Properties.gpsKalmanFilterRvalue*1000));
         kalman_filtration_switch.setChecked(Properties.isFiltrationEnabled);
         update_interval_bar.setProgress(Properties.minDistanceBetweenGPSUpdates);
         update_delay_bar.setProgress(Properties.minTimeBetweenGPSUpdates/1000);
@@ -105,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b)
             {
-
+                sigma_value_field.setText(((Double)(Properties.gpsKalmanFilterQvalue*10000)).toString());
             }
 
             @Override
@@ -117,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onStopTrackingTouch(SeekBar seekBar)
             {
-
+                Properties.gpsKalmanFilterQvalue = ((double)seekBar.getProgress())/10000d;
             }
         });
 
@@ -126,7 +127,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b)
             {
-
+                ro_value_field.setText(((Double)(Properties.gpsKalmanFilterRvalue*1000)).toString());
             }
 
             @Override
@@ -138,7 +139,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onStopTrackingTouch(SeekBar seekBar)
             {
-
+                Properties.gpsKalmanFilterRvalue = ((double)seekBar.getProgress())/1000d;
             }
         });
 
@@ -147,7 +148,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-
+                Properties.isFiltrationEnabled = kalman_filtration_switch.isChecked();
             }
         });
 
@@ -189,6 +190,46 @@ public class SettingsActivity extends AppCompatActivity
                         Properties.minTimeBetweenGPSUpdates = 1000;
                     }
                     update_delay_bar.setProgress(Properties.minTimeBetweenGPSUpdates/1000);
+                }
+            }
+        });
+
+        sigma_value_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean has_focus)
+            {
+                if(!has_focus)
+                {
+                    String field_value = sigma_value_field.getText().toString();
+                    if(field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
+                    {
+                        Properties.gpsKalmanFilterQvalue = Double.parseDouble(field_value)/10000d;
+                    }
+                    else
+                    {
+                        Properties.gpsKalmanFilterQvalue = 0.0001;
+                    }
+                }
+            }
+        });
+
+        ro_value_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean has_focus)
+            {
+                if(!has_focus)
+                {
+                    String field_value = ro_value_field.getText().toString();
+                    if(field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
+                    {
+                        Properties.gpsKalmanFilterRvalue = Double.parseDouble(field_value)/1000d;
+                    }
+                    else
+                    {
+                        Properties.gpsKalmanFilterRvalue = 0.01;
+                    }
                 }
             }
         });

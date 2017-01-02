@@ -55,12 +55,6 @@ public class GPSDataProvider implements LocationListener
         return instance;
     }
 
-    /*
-        onLocationChanged is the most important method. It is invoked when location have been changed.
-        This method invokes saveLocationDataArrayToInterpolatedKmlFile to save data into file.
-        It is also saving two previous Locations velocities and acceleration.
-     */
-
     @Override
     public void onLocationChanged(Location location)
     {
@@ -129,13 +123,13 @@ public class GPSDataProvider implements LocationListener
     public void onProviderEnabled(String s)
     {
 
-    } //TODO: Dodac wlaczanie locationmanagera
+    }
 
     @Override
     public void onProviderDisabled(String s)
     {
 
-    } //TODO: zerowanie punktow interpolacji i filtracji, wylaczanie location managera
+    }
 
     public void enableGPSRequests()
     {

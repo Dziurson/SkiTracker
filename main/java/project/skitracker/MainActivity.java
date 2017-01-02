@@ -36,6 +36,7 @@ import static java.lang.Math.round;
 //TODO: CHECK IF THERE ARE ANY! MULTITHREAD CONFLICTS ( USE VOLATILE AND SYNCHRONIZED )
 //TODO: IF TIME BETWEEN LOCATION UPDATES EXCEEDS (5-15s) SET KALMANFILTER X TO LOCATION VALUE (ALSO INTERPOLATION SHOULD BE STOPPED!!
 //TODO: ADD CHECK FOR PROPETIES VALUE CHANGES
+//TODO: ADD CHECK FOR EVERY VALUE IN PROPERTIES
 public class MainActivity extends AppCompatActivity implements Serializable
 {
     //Fields that represents movement data (velocity, acceleration, longitude, latitude).
@@ -58,10 +59,8 @@ public class MainActivity extends AppCompatActivity implements Serializable
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //Set view for application (activity_main.xml).
         setContentView(R.layout.activity_main);
         initialize();
-        //TODO: Settings action, split into initialize and field.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
