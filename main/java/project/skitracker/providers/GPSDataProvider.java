@@ -37,6 +37,8 @@ public class GPSDataProvider implements LocationListener
     private Velocity velocity;
     private Velocity velocity_prev;
     private double acceleration = 0;
+    private double current_time;
+    private double current_interval;
 
     private GPSDataProvider(MainActivity sender)
     {
@@ -46,6 +48,8 @@ public class GPSDataProvider implements LocationListener
         location_manager = (LocationManager) this.sender.getSystemService(Context.LOCATION_SERVICE);
         longitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
         latitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
+        current_time = Properties.minTimeBetweenGPSUpdates;
+        current_interval = Properties.minDistanceBetweenGPSUpdates;
         enableGPSRequests();
     }
 
@@ -109,8 +113,12 @@ public class GPSDataProvider implements LocationListener
                     sender.saveLocationDataArrayToInterpolatedKmlFile(filtered_location_list);
                 }
             }
-
             sender.updateTextViews(getVelocity(), getAcceleration(), getLatitude(), getLongitude());
+            if (checkForValuesChange())
+            {
+                disableGPSRequests();
+                enableGPSRequests();
+            }
         }
     }
 
@@ -167,7 +175,7 @@ public class GPSDataProvider implements LocationListener
             }
             // If permissions have been granted its possible to invoke method.
             else sender.setGPSPermission(true);
-            if (sender.getGPSPermission()) location_manager.removeTestProvider(LocationManager.GPS_PROVIDER);
+            if (sender.getGPSPermission()) location_manager.removeUpdates(this);
         }
     }
 
@@ -204,5 +212,10 @@ public class GPSDataProvider implements LocationListener
     public double getLatitude()
     {
         return this.location_data.getLatitude();
+    }
+
+    private boolean checkForValuesChange()
+    {
+        return !(current_interval == Properties.minDistanceBetweenGPSUpdates) || (current_time == Properties.minTimeBetweenGPSUpdates);
     }
 }
