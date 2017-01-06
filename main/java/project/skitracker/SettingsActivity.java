@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import project.skitracker.listeners.OnFocusChangeCustomListener;
 import project.skitracker.settings.Properties;
 import project.skitracker.listeners.OnSeekBarChangeCustomListener;
 
@@ -59,9 +60,13 @@ public class SettingsActivity extends AppCompatActivity
     private void enableListeners()
     {
         update_interval_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_interval_field,"minDistanceBetweenGPSUpdates",Integer.TYPE,1,this));
-        update_delay_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_delay_field,"minTimeBetweenGPSUpdates",Integer.TYPE,0.001,this));
+        update_delay_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_delay_field,"minTimeBetweenGPSUpdates",Integer.TYPE,0.001d,this));
         sigma_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(sigma_value_field,"gpsKalmanFilterQvalue",Double.TYPE,10000d,this));
         ro_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(ro_value_field,"gpsKalmanFilterRvalue",Double.TYPE,1000d,this));
+        update_interval_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(update_interval_field,update_interval_bar,"minDistanceBetweenGPSUpdates",Integer.TYPE,1,this));
+        update_delay_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(update_delay_field,update_delay_bar,"minTimeBetweenGPSUpdates",Integer.TYPE,0.001d,this));
+        sigma_value_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(sigma_value_field,sigma_value_bar,"gpsKalmanFilterQvalue",Double.TYPE,10000d,this));
+        ro_value_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(ro_value_field,ro_value_bar,"gpsKalmanFilterRvalue",Double.TYPE,1000d,this));
 
         kalman_filtration_switch.setOnClickListener(new View.OnClickListener()
         {
@@ -72,84 +77,6 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        update_interval_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean has_focus)
-            {
-                if (!has_focus)
-                {
-                    String field_value = update_interval_field.getText().toString();
-                    if (field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
-                    {
-                        Properties.minDistanceBetweenGPSUpdates = (int) (Double.parseDouble(field_value));
-                    } else
-                    {
-                        Properties.minDistanceBetweenGPSUpdates = 5;
-                    }
-                    update_interval_bar.setProgress(Properties.minDistanceBetweenGPSUpdates);
-                }
-            }
-        });
 
-        update_delay_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean has_focus)
-            {
-                if (!has_focus)
-                {
-                    String field_value = update_delay_field.getText().toString();
-                    if (field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
-                    {
-                        Properties.minTimeBetweenGPSUpdates = (int) (Double.parseDouble(field_value) * 1000);
-                    } else
-                    {
-                        Properties.minTimeBetweenGPSUpdates = 1000;
-                    }
-                    update_delay_bar.setProgress(Properties.minTimeBetweenGPSUpdates / 1000);
-                }
-            }
-        });
-
-        sigma_value_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean has_focus)
-            {
-                if (!has_focus)
-                {
-                    String field_value = sigma_value_field.getText().toString();
-                    if (field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
-                    {
-                        Properties.gpsKalmanFilterQvalue = Double.parseDouble(field_value) / 10000d;
-                    } else
-                    {
-                        Properties.gpsKalmanFilterQvalue = 0.0001;
-                    }
-                    sigma_value_bar.setProgress((int)(Properties.gpsKalmanFilterQvalue * 10000d));
-                }
-            }
-        });
-
-        ro_value_field.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean has_focus)
-            {
-                if (!has_focus)
-                {
-                    String field_value = ro_value_field.getText().toString();
-                    if (field_value.matches("([0-9]*[1-9]+[0-9]*)|([0-9]+(\\.|,)[0-9]*[1-9]+[0-9]*)"))
-                    {
-                        Properties.gpsKalmanFilterRvalue = Double.parseDouble(field_value) / 1000d;
-                    } else
-                    {
-                        Properties.gpsKalmanFilterRvalue = 0.01;
-                    }
-                    ro_value_bar.setProgress((int)(Properties.gpsKalmanFilterRvalue * 1000d));
-                }
-            }
-        });
     }
 }
