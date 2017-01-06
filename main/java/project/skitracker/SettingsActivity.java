@@ -7,12 +7,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.TextView;
 import project.skitracker.settings.Properties;
+import project.skitracker.listeners.OnSeekBarChangeCustomListener;
 
 public class SettingsActivity extends AppCompatActivity
 {
-    private MainActivity sender;
     private EditText update_interval_field;
     private EditText update_delay_field;
     private EditText sigma_value_field;
@@ -59,89 +58,10 @@ public class SettingsActivity extends AppCompatActivity
 
     private void enableListeners()
     {
-        update_interval_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
-            {
-                update_interval_field.setText(((Integer) update_interval_bar.getProgress()).toString());
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-                Properties.minDistanceBetweenGPSUpdates = update_interval_bar.getProgress();
-            }
-        });
-
-        update_delay_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
-            {
-                update_delay_field.setText(((Integer) (update_delay_bar.getProgress())).toString());
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-                Properties.minTimeBetweenGPSUpdates = update_delay_bar.getProgress() * 1000;
-            }
-        });
-
-        sigma_value_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
-            {
-                sigma_value_field.setText(((Double) ((double)sigma_value_bar.getProgress() / 10000d)).toString());
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-                Properties.gpsKalmanFilterQvalue = ((double) seekBar.getProgress()) / 10000d;
-            }
-        });
-
-        ro_value_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
-            {
-                ro_value_field.setText(((Double) ((double)ro_value_bar.getProgress() / 1000d)).toString());
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-                Properties.gpsKalmanFilterRvalue = ((double) seekBar.getProgress()) / 1000d;
-            }
-        });
+        update_interval_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_interval_field,"minDistanceBetweenGPSUpdates",Integer.TYPE,1,this));
+        update_delay_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_delay_field,"minTimeBetweenGPSUpdates",Integer.TYPE,0.001,this));
+        sigma_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(sigma_value_field,"gpsKalmanFilterQvalue",Double.TYPE,10000d,this));
+        ro_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(ro_value_field,"gpsKalmanFilterRvalue",Double.TYPE,1000d,this));
 
         kalman_filtration_switch.setOnClickListener(new View.OnClickListener()
         {

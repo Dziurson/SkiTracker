@@ -20,7 +20,6 @@ import project.skitracker.providers.KMLFileProvider;
 import project.skitracker.providers.GPSDataProvider;
 import project.skitracker.settings.Properties;
 
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +36,7 @@ import static java.lang.Math.round;
 //TODO: IF TIME BETWEEN LOCATION UPDATES EXCEEDS (5-15s) SET KALMANFILTER X TO LOCATION VALUE (ALSO INTERPOLATION SHOULD BE STOPPED!!
 //TODO: ADD CHECK FOR PROPETIES VALUE CHANGES
 //TODO: ADD CHECK FOR EVERY VALUE IN PROPERTIES
-public class MainActivity extends AppCompatActivity implements Serializable
+public class MainActivity extends AppCompatActivity
 {
     //Fields that represents movement data (velocity, acceleration, longitude, latitude).
     private TextView szerokosc_textview, dlugosc_textview, predkosc_textview, acceleration_textview;
