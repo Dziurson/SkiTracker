@@ -7,7 +7,6 @@ import static java.lang.Math.pow;
 //Interpolating only ONE DIMENSION! It needs to be used once for Longtitude and once for latitude;
 public class SplineInterpolation
 {
-
     private ArrayList<Double> values;
     private static final int element_count = 10;
     private double m1,m2,d[],a[],step;

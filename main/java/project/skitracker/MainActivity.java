@@ -28,14 +28,7 @@ import static java.lang.Math.round;
 
 //Minimalna wersja: Android 4.4, dodane wsparcie dla Androida 6.0
 //TODO: DODAC PROSBE O WLACZENIE GPS PRZY STARCIE APLIKACJI
-//TODO: ODSWIEZANIE WIDOKU, ZAPIS DO PLIKU KML W OSOBNYM WATKU
-//TODO: LOCK ORIENTATION
-//TODO: MAKE KMLFILEGENERATOR MORE SAFE!!!!!!!!!!!
-//TODO: KMLFILEPROVIDER extends FILEPROVIDER and ACCELERATIONFILEPROVIDER extends FILEPROVIDER
-//TODO: CHECK IF THERE ARE ANY! MULTITHREAD CONFLICTS ( USE VOLATILE AND SYNCHRONIZED )
-//TODO: IF TIME BETWEEN LOCATION UPDATES EXCEEDS (5-15s) SET KALMANFILTER X TO LOCATION VALUE (ALSO INTERPOLATION SHOULD BE STOPPED!!
-//TODO: ADD CHECK FOR PROPETIES VALUE CHANGES
-//TODO: ADD CHECK FOR EVERY VALUE IN PROPERTIES
+//TODO: DODAC MOZLIWOSC WYSWIETLENIA LITY PLIKOW KML NA TELEFONIE
 public class MainActivity extends AppCompatActivity
 {
     //Fields that represents movement data (velocity, acceleration, longitude, latitude).
@@ -207,7 +200,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    //Runtime Permission Provider
     @Override
     public void onRequestPermissionsResult(int requestcode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -239,7 +231,6 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-
     public boolean getGPSPermission()
     {
         return Properties.gps_permission_granted;

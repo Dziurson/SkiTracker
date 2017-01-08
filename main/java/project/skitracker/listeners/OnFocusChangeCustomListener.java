@@ -1,13 +1,11 @@
 package project.skitracker.listeners;
 
-
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import project.skitracker.SettingsActivity;
 import project.skitracker.settings.Properties;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
@@ -48,22 +46,22 @@ public class OnFocusChangeCustomListener implements View.OnFocusChangeListener
                 {
                     if(typ == Integer.TYPE)
                     {
-                        prop.set(null,(int)((double)Integer.parseInt(field_value)));
+                        String[] parts = field_value.split("\\.|,");
+                        prop.set(null,(int)((double)Integer.parseInt(parts[0])));
                         bar.setProgress((int)((int)prop.get(null)*coeff));
                     }
                     if(typ == Double.TYPE)
                     {
+                        field_value = field_value.replace(',','.');
                         prop.set(null,(Double.parseDouble(field_value)));
                         bar.setProgress((int)((double)prop.get(null)*coeff));
                     }
-
                     Toast.makeText(settingsActivity,"Wartość " + prop.getName() + ": " + prop.get(null),Toast.LENGTH_SHORT).show();
                 }
                 catch (Exception e)
                 {
                     Toast.makeText(settingsActivity,e.getMessage(),Toast.LENGTH_LONG).show();
                 }
-
             }
             else
             {

@@ -30,7 +30,6 @@ public class OnSeekBarChangeCustomListener implements SeekBar.OnSeekBarChangeLis
         {
             e.printStackTrace();
         }
-
         this.coeff = coeff;
     }
 

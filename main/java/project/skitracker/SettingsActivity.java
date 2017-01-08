@@ -76,7 +76,5 @@ public class SettingsActivity extends AppCompatActivity
                 Properties.isFiltrationEnabled = kalman_filtration_switch.isChecked();
             }
         });
-
-
     }
 }

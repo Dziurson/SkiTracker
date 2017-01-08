@@ -11,7 +11,7 @@ import project.skitracker.settings.Properties;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
-
+@Deprecated
 public class AccelerometerDataProvider implements SensorEventListener
 {
     private MainActivity sender;
@@ -23,6 +23,7 @@ public class AccelerometerDataProvider implements SensorEventListener
     private volatile double filteredacceleration;
     private volatile double acceleration;
     private volatile double accx,accy,accz,accxf,accyf,acczf;
+
 
     private AccelerometerDataProvider(MainActivity sender)
     {
