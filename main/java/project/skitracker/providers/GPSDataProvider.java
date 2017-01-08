@@ -10,11 +10,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import project.skitracker.MainActivity;
-import project.skitracker.models.SplineInterpolation;
-import project.skitracker.settings.Properties;
 import project.skitracker.data.Velocity;
 import project.skitracker.models.KalmanFilter;
+import project.skitracker.models.SplineInterpolation;
+import project.skitracker.settings.Properties;
+
 import java.util.ArrayList;
+
 import static java.lang.Math.abs;
 
 /*
@@ -46,8 +48,8 @@ public class GPSDataProvider implements LocationListener
         longitude_interpolation = new SplineInterpolation();
         latitude_interpolation = new SplineInterpolation();
         location_manager = (LocationManager) this.sender.getSystemService(Context.LOCATION_SERVICE);
-        longitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
-        latitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue,Properties.gpsKalmanFilterRvalue);
+        longitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue, Properties.gpsKalmanFilterRvalue);
+        latitude_filtration = new KalmanFilter(Properties.gpsKalmanFilterQvalue, Properties.gpsKalmanFilterRvalue);
         current_time = Properties.minTimeBetweenGPSUpdates;
         current_interval = Properties.minDistanceBetweenGPSUpdates;
         enableGPSRequests();
@@ -84,13 +86,13 @@ public class GPSDataProvider implements LocationListener
 
             if ((longitude_list != null) && (latitude_list != null))
             {
-                for(int i = 0; i < latitude_list.size(); i++)
+                for (int i = 0; i < latitude_list.size(); i++)
                 {
                     location_list.add(longitude_list.get(i).toString() + "," + latitude_list.get(i).toString());
                 }
             }
 
-            if(!Properties.isFiltrationEnabled) sender.saveLocationDataArrayToInterpolatedKmlFile(location_list);
+            if (!Properties.isFiltrationEnabled) sender.saveLocationDataArrayToInterpolatedKmlFile(location_list);
             else
             {
                 if ((longitude_list != null) && (latitude_list != null))
@@ -149,13 +151,15 @@ public class GPSDataProvider implements LocationListener
             if (ActivityCompat.checkSelfPermission(sender, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(sender, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             {
                 // Request for Runtime permission. This method invokes onRequestPermissionResult in MainActivity
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ActivityCompat.requestPermissions(sender, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Properties.MY_PERMISSIONS_REQUEST_COARSE_AND_FINE_LOCATION_TURN_ON);
-                // If something went wrong in permissions go here
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    ActivityCompat.requestPermissions(sender, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Properties.MY_PERMISSIONS_REQUEST_COARSE_AND_FINE_LOCATION_TURN_ON);
+                    // If something went wrong in permissions go here
                 else sender.setGPSPermission(false);
             }
             // If permissions have been granted its possible to invoke method.
             else sender.setGPSPermission(true);
-            if (sender.getGPSPermission()) location_manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Properties.minTimeBetweenGPSUpdates, Properties.minDistanceBetweenGPSUpdates, this);
+            if (sender.getGPSPermission())
+                location_manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Properties.minTimeBetweenGPSUpdates, Properties.minDistanceBetweenGPSUpdates, this);
         }
     }
 
@@ -169,7 +173,8 @@ public class GPSDataProvider implements LocationListener
             if (ActivityCompat.checkSelfPermission(sender, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(sender, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             {
                 // Request for Runtime permission. This method invokes onRequestPermissionResult in MainActivity
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ActivityCompat.requestPermissions(sender, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Properties.MY_PERMISSIONS_REQUEST_COARSE_AND_FINE_LOCATION_TURN_OFF);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    ActivityCompat.requestPermissions(sender, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Properties.MY_PERMISSIONS_REQUEST_COARSE_AND_FINE_LOCATION_TURN_OFF);
                     // If something went wrong in permissions go here
                 else sender.setGPSPermission(false);
             }
@@ -181,9 +186,9 @@ public class GPSDataProvider implements LocationListener
 
     private double calculateVelocity()
     {
-        if((location_data != null) && (location_data_prev != null))
+        if ((location_data != null) && (location_data_prev != null))
         {
-            return abs(location_data.distanceTo(location_data_prev))/((location_data.getTime() - location_data_prev.getTime())/1000);
+            return abs(location_data.distanceTo(location_data_prev)) / ((location_data.getTime() - location_data_prev.getTime()) / 1000);
         }
         else return 0;
     }
@@ -197,18 +202,22 @@ public class GPSDataProvider implements LocationListener
     {
         return velocity.getVelocityInKph();
     }
+
     public double getVelocity()
     {
         return velocity.getVelocity();
     }
+
     public double getAcceleration()
     {
         return acceleration;
     }
+
     public double getLongitude()
     {
         return this.location_data.getLongitude();
     }
+
     public double getLatitude()
     {
         return this.location_data.getLatitude();

@@ -37,7 +37,7 @@ public class OnSeekBarChangeCustomListener implements SeekBar.OnSeekBarChangeLis
     @SuppressWarnings("all")
     public void onProgressChanged(SeekBar seekBar, int i, boolean b)
     {
-        field.setText(((Double)((double)seekBar.getProgress()/coeff)).toString());
+        field.setText(((Double) ((double) seekBar.getProgress() / coeff)).toString());
     }
 
     @Override
@@ -51,16 +51,16 @@ public class OnSeekBarChangeCustomListener implements SeekBar.OnSeekBarChangeLis
     {
         try
         {
-            if(prop != null)
+            if (prop != null)
             {
-                if (typ == Double.TYPE) prop.set(null,((double)seekBar.getProgress()/coeff));
-                if (typ == Integer.TYPE) prop.set(null, (int)(seekBar.getProgress()/coeff));
-                Toast.makeText(settingsActivity,"Wartość " + prop.getName() + ": " + prop.get(null),Toast.LENGTH_SHORT).show();
+                if (typ == Double.TYPE) prop.set(null, ((double) seekBar.getProgress() / coeff));
+                if (typ == Integer.TYPE) prop.set(null, (int) (seekBar.getProgress() / coeff));
+                Toast.makeText(settingsActivity, "Wartość " + prop.getName() + ": " + prop.get(null), Toast.LENGTH_SHORT).show();
             }
         }
         catch (Exception e)
         {
-           Toast.makeText(settingsActivity,e.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(settingsActivity, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

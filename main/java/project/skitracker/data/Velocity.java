@@ -21,24 +21,19 @@ public class Velocity
         return v;
     }
 
+    public void setVelocity(double v)
+    {
+        this.v = v;
+    }
+
     public double getVelocityInKph()
     {
-        return v*3.6;
+        return v * 3.6;
     }
 
     public long getTime()
     {
         return this.t;
-    }
-
-    public Date getDate()
-    {
-        return new Date(this.t);
-    }
-
-    public void setVelocity(double v)
-    {
-        this.v = v;
     }
 
     public void setTime(long t)
@@ -49,5 +44,10 @@ public class Velocity
     public void setTime(Date d)
     {
         this.t = d.getTime();
+    }
+
+    public Date getDate()
+    {
+        return new Date(this.t);
     }
 }

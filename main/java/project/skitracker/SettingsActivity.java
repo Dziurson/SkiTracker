@@ -8,8 +8,8 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import project.skitracker.listeners.OnFocusChangeCustomListener;
-import project.skitracker.settings.Properties;
 import project.skitracker.listeners.OnSeekBarChangeCustomListener;
+import project.skitracker.settings.Properties;
 
 public class SettingsActivity extends AppCompatActivity
 {
@@ -59,14 +59,14 @@ public class SettingsActivity extends AppCompatActivity
 
     private void enableListeners()
     {
-        update_interval_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_interval_field,"minDistanceBetweenGPSUpdates",Integer.TYPE,1,this));
-        update_delay_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_delay_field,"minTimeBetweenGPSUpdates",Integer.TYPE,0.001d,this));
-        sigma_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(sigma_value_field,"gpsKalmanFilterQvalue",Double.TYPE,10000d,this));
-        ro_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(ro_value_field,"gpsKalmanFilterRvalue",Double.TYPE,1000d,this));
-        update_interval_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(update_interval_field,update_interval_bar,"minDistanceBetweenGPSUpdates",Integer.TYPE,1,this));
-        update_delay_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(update_delay_field,update_delay_bar,"minTimeBetweenGPSUpdates",Integer.TYPE,0.001d,this));
-        sigma_value_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(sigma_value_field,sigma_value_bar,"gpsKalmanFilterQvalue",Double.TYPE,10000d,this));
-        ro_value_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(ro_value_field,ro_value_bar,"gpsKalmanFilterRvalue",Double.TYPE,1000d,this));
+        update_interval_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_interval_field, "minDistanceBetweenGPSUpdates", Integer.TYPE, 1, this));
+        update_delay_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_delay_field, "minTimeBetweenGPSUpdates", Integer.TYPE, 0.001d, this));
+        sigma_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(sigma_value_field, "gpsKalmanFilterQvalue", Double.TYPE, 10000d, this));
+        ro_value_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(ro_value_field, "gpsKalmanFilterRvalue", Double.TYPE, 1000d, this));
+        update_interval_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(update_interval_field, update_interval_bar, "minDistanceBetweenGPSUpdates", Integer.TYPE, 1, this));
+        update_delay_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(update_delay_field, update_delay_bar, "minTimeBetweenGPSUpdates", Integer.TYPE, 0.001d, this));
+        sigma_value_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(sigma_value_field, sigma_value_bar, "gpsKalmanFilterQvalue", Double.TYPE, 10000d, this));
+        ro_value_field.setOnFocusChangeListener(new OnFocusChangeCustomListener(ro_value_field, ro_value_bar, "gpsKalmanFilterRvalue", Double.TYPE, 1000d, this));
 
         kalman_filtration_switch.setOnClickListener(new View.OnClickListener()
         {

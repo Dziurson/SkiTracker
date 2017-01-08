@@ -1,12 +1,11 @@
 package project.skitracker;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-
 import android.view.View;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,18 +14,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import project.skitracker.exceptions.NotImplementedException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 {
@@ -63,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view)
             {
                 //TODO: Make scrolling listview of saved kml files.
-                Snackbar.make(view,"TODO: Show list of kml filse",Snackbar.LENGTH_LONG);
+                Snackbar.make(view, "TODO: Show list of kml filse", Snackbar.LENGTH_LONG);
             }
         });
     }
@@ -78,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         throw new NotImplementedException();
     }
 
-    public void addLineFromDoubles(ArrayList<Double> location_latitude_list, ArrayList<Double> location_longitude_list, String label) throws  NotImplementedException
+    public void addLineFromDoubles(ArrayList<Double> location_latitude_list, ArrayList<Double> location_longitude_list, String label) throws NotImplementedException
     {
         throw new NotImplementedException();
     }
@@ -94,16 +90,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             List<LatLng> point_list = new LinkedList<>();
             String line = bread.readLine();
             boolean check = false;
-            while(line != null)
+            while (line != null)
             {
-                line = line.replaceAll("[\\t| ]*","").replaceAll("<!--.*>","");
+                line = line.replaceAll("[\\t| ]*", "").replaceAll("<!--.*>", "");
                 if (line.equalsIgnoreCase("</coordinates>")) check = false;
                 if (check)
                 {
                     String[] parts = line.split(",");
-                    if((parts[0] != null) && (parts[1] != null))
+                    if ((parts[0] != null) && (parts[1] != null))
                     {
-                        point_list.add(new LatLng(Double.parseDouble(parts[1]),(Double.parseDouble(parts[0]))));
+                        point_list.add(new LatLng(Double.parseDouble(parts[1]), (Double.parseDouble(parts[0]))));
                     }
                 }
                 if (line.equalsIgnoreCase("<coordinates>")) check = true;
@@ -117,7 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         catch (Exception e)
         {
-            Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -125,7 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         if (mMap != null)
         {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude,longitude)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
         }
     }
 
@@ -133,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         if (mMap != null)
         {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title(label));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(label));
         }
     }
 

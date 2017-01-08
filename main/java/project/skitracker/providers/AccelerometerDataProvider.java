@@ -11,18 +11,19 @@ import project.skitracker.settings.Properties;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
+
 @Deprecated
 public class AccelerometerDataProvider implements SensorEventListener
 {
+    private static AccelerometerDataProvider instance = null;
     private MainActivity sender;
     private SensorManager sensmgr;
     private KalmanFilter accfilterx, accfiltery, accfilterz;
-    private double Q,R;
+    private double Q, R;
     private Sensor accelerometer;
-    private static AccelerometerDataProvider instance = null;
     private volatile double filteredacceleration;
     private volatile double acceleration;
-    private volatile double accx,accy,accz,accxf,accyf,acczf;
+    private volatile double accx, accy, accz, accxf, accyf, acczf;
 
 
     private AccelerometerDataProvider(MainActivity sender)
@@ -44,10 +45,11 @@ public class AccelerometerDataProvider implements SensorEventListener
         sensmgr = (SensorManager) sender.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensmgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         Properties.isAccelerometerAvailable = (accelerometer != null);
-        if (Properties.isAccelerometerAvailable) sensmgr.registerListener(this,accelerometer,Properties.ACCELEROMETER_UPDATES_DELAY);
-        accfilterx = new KalmanFilter(Q,R);
-        accfiltery = new KalmanFilter(Q,R);
-        accfilterz = new KalmanFilter(Q,R);
+        if (Properties.isAccelerometerAvailable)
+            sensmgr.registerListener(this, accelerometer, Properties.ACCELEROMETER_UPDATES_DELAY);
+        accfilterx = new KalmanFilter(Q, R);
+        accfiltery = new KalmanFilter(Q, R);
+        accfilterz = new KalmanFilter(Q, R);
     }
 
     @Override
@@ -59,8 +61,8 @@ public class AccelerometerDataProvider implements SensorEventListener
         accxf = accfilterx.filterSingleValue(accx);
         accyf = accfiltery.filterSingleValue(accy);
         acczf = accfilterz.filterSingleValue(accz);
-        acceleration = sqrt(pow(accx,2) + pow(accy,2) + pow(accz,2)) - Properties.GRAVITY_VALUE;
-        filteredacceleration = sqrt(pow(accxf,2) + pow(accyf,2) + pow(acczf,2)) - Properties.GRAVITY_VALUE;
+        acceleration = sqrt(pow(accx, 2) + pow(accy, 2) + pow(accz, 2)) - Properties.GRAVITY_VALUE;
+        filteredacceleration = sqrt(pow(accxf, 2) + pow(accyf, 2) + pow(acczf, 2)) - Properties.GRAVITY_VALUE;
     }
 
     @Override

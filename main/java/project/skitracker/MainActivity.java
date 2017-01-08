@@ -4,20 +4,20 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import project.skitracker.providers.KMLFileProvider;
 import project.skitracker.providers.GPSDataProvider;
+import project.skitracker.providers.KMLFileProvider;
 import project.skitracker.settings.Properties;
 
 import java.text.DecimalFormat;
@@ -31,6 +31,8 @@ import static java.lang.Math.round;
 //TODO: DODAC MOZLIWOSC WYSWIETLENIA LITY PLIKOW KML NA TELEFONIE
 public class MainActivity extends AppCompatActivity
 {
+    //This Object implements LocationListener and SensorListener Interfaces. Provides GPS and Accelerometer data.
+    GPSDataProvider movement_tracker;
     //Fields that represents movement data (velocity, acceleration, longitude, latitude).
     private TextView szerokosc_textview, dlugosc_textview, predkosc_textview, acceleration_textview;
     //Progressbars graphically shows velocity and acceleration
@@ -39,8 +41,6 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton recording_button;
     //Two kml file providers - one for raw data, one for interpolated data
     private KMLFileProvider kml_raw_file_provider, kml_interpolated_file_generator;
-    //This Object implements LocationListener and SensorListener Interfaces. Provides GPS and Accelerometer data.
-    GPSDataProvider movement_tracker;
     //Two data formatters, one for Longitude and Latitude, second for Velocity and Acceleration.
     private DecimalFormat coordinates_format, av_format;
     //Date provider - used for kml filename.
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if(checkForWriteExternalPermission())
+                if (checkForWriteExternalPermission())
                 {
                     if (!Properties.is_kml_file_opened)
                     {
@@ -70,14 +70,16 @@ public class MainActivity extends AppCompatActivity
                         String filename_filtered = calendar.getTime().toString() + calendar.getTimeInMillis() + "filtered.kml";
                         if (kml_raw_file_provider.openFile(filename))
                         {
-                            if(kml_interpolated_file_generator.openFile(filename_filtered)) Snackbar.make(view, getResources().getString(R.string.file_writing_started), Snackbar.LENGTH_LONG).show();
+                            if (kml_interpolated_file_generator.openFile(filename_filtered))
+                                Snackbar.make(view, getResources().getString(R.string.file_writing_started), Snackbar.LENGTH_LONG).show();
                             else
                             {
                                 Snackbar.make(view, getResources().getString(R.string.file_error_message), Snackbar.LENGTH_LONG).show();
                                 kml_raw_file_provider.closeFile();
                             }
                         }
-                        else Snackbar.make(view, getResources().getString(R.string.file_error_message), Snackbar.LENGTH_LONG).show();
+                        else
+                            Snackbar.make(view, getResources().getString(R.string.file_error_message), Snackbar.LENGTH_LONG).show();
                     }
                     else
                     {
@@ -100,7 +102,8 @@ public class MainActivity extends AppCompatActivity
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
             //If android version is lower than Marshmallow and data flows here there is a permission error and instalation should be checked, else application requests for writing permission (handled by onRequestPermissionResult).
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, Properties.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Properties.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
             else Properties.external_storage_write_permission_granted = false;
         }
         //If permission is already granted there is no need to request it.
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     //Simple method for changing Icon style while recording is on/off.
     private void changeFabStyle(boolean b)
     {
-        if(b) recording_button.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        if (b) recording_button.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         else recording_button.setImageResource(android.R.drawable.ic_media_play);
     }
 
@@ -138,17 +141,18 @@ public class MainActivity extends AppCompatActivity
     {
         updateSingleTextView(szerokosc_textview, coordinates_format.format(szer).toString());
         updateSingleTextView(dlugosc_textview, coordinates_format.format(dlug).toString());
-        updateSingleTextView(predkosc_textview,av_format.format(v*3.6).toString() + " km/h");
-        updateSingleTextView(acceleration_textview,av_format.format(a).toString() + " m/s^2");
-        updateProgressBar(velocity_bar,v*3.6);
-        updateProgressBar(acceleration_bar,a*10+40);
-        if (Properties.is_kml_file_opened) kml_raw_file_provider.addCoordinates(dlug + "," + szer + " <!-- v = " + v*3.6 + ", a = " + a + "-->");
+        updateSingleTextView(predkosc_textview, av_format.format(v * 3.6).toString() + " km/h");
+        updateSingleTextView(acceleration_textview, av_format.format(a).toString() + " m/s^2");
+        updateProgressBar(velocity_bar, v * 3.6);
+        updateProgressBar(acceleration_bar, a * 10 + 40);
+        if (Properties.is_kml_file_opened)
+            kml_raw_file_provider.addCoordinates(dlug + "," + szer + " <!-- v = " + v * 3.6 + ", a = " + a + "-->");
     }
 
     //Saving array of strings to kml_interpolated_file_generator file
     public synchronized void saveLocationDataArrayToInterpolatedKmlFile(ArrayList<String> str)
     {
-        if(Properties.is_kml_file_opened) kml_interpolated_file_generator.addAllCoordinates(str);
+        if (Properties.is_kml_file_opened) kml_interpolated_file_generator.addAllCoordinates(str);
     }
 
     // Function used to fill data from Accelerometer.
@@ -166,7 +170,7 @@ public class MainActivity extends AppCompatActivity
     private void updateProgressBar(ProgressBar b, double v)
     {
         if (v > b.getMax()) b.setProgress(b.getMax());
-        else b.setProgress((int)round(v));
+        else b.setProgress((int) round(v));
     }
 
     @Override
@@ -188,12 +192,12 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_open_map)
         {
-            Intent intent = new Intent(this,MapsActivity.class);
+            Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
         }
         if (id == R.id.action_settings)
         {
-            Intent intent = new Intent(this,SettingsActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
 
@@ -203,8 +207,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestcode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
-        super.onRequestPermissionsResult(requestcode,permissions,grantResults);
-        switch(requestcode)
+        super.onRequestPermissionsResult(requestcode, permissions, grantResults);
+        switch (requestcode)
         {
             case Properties.MY_PERMISSIONS_REQUEST_COARSE_AND_FINE_LOCATION_TURN_ON:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
@@ -231,10 +235,12 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
     public boolean getGPSPermission()
     {
         return Properties.gps_permission_granted;
     }
+
     public void setGPSPermission(boolean b)
     {
         Properties.gps_permission_granted = b;

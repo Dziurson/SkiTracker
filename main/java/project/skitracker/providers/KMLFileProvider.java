@@ -19,6 +19,7 @@ public class KMLFileProvider
     {
         initialize(sender);
     }
+
     private void initialize(MainActivity sender)
     {
         mainActivity = sender;
@@ -54,6 +55,7 @@ public class KMLFileProvider
             return false;
         }
     }
+
     public synchronized boolean addCoordinates(String s)
     {
         try
@@ -61,11 +63,12 @@ public class KMLFileProvider
             fout.append("           " + s + "\r\n");
             return true;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return false;
         }
     }
+
     public synchronized void addAllCoordinates(ArrayList<String> list)
     {
         if (list != null)
@@ -76,6 +79,7 @@ public class KMLFileProvider
             }
         }
     }
+
     public boolean closeFile()
     {
         Properties.is_kml_file_opened = false;
@@ -90,11 +94,12 @@ public class KMLFileProvider
             fout.close();
             return true;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return false;
         }
     }
+
     public void setPlacemarkName(String name) throws NotImplementedException
     {
         throw new NotImplementedException();

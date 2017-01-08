@@ -27,7 +27,7 @@ public class KalmanFilter
     public ArrayList<Double> filterArrayOfValues(ArrayList<Double> list)
     {
         ArrayList<Double> ret_list = new ArrayList<Double>();
-        for(double data: list)
+        for (double data : list)
         {
             ret_list.add(filterSingleValue(data));
         }
