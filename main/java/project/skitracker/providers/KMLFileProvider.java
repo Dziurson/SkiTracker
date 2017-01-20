@@ -34,7 +34,7 @@ public class KMLFileProvider
             fout.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
             fout.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\"\r\n" + " xmlns:gx=\"http://www.google.com/kml/ext/2.2\">\r\n");
             fout.append("<Placemark>\r\n" +
-                    "   <name>gx:altitudeMode Example</name>\r\n" +
+                    "   <name>track</name>\r\n" +
                     "   <LookAt>\r\n" +
                     "       <longitude>146.806</longitude>\r\n" +
                     "       <latitude>12.219</latitude>\r\n" +

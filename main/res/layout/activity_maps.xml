@@ -1,17 +1,37 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          xmlns:map="http://schemas.android.com/apk/res-auto"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:id="@+id/map"
-          tools:context="project.skitracker.MapsActivity"
-          android:name="com.google.android.gms.maps.SupportMapFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/main_content_background">
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:map="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/map"
+              tools:context="project.skitracker.MapsActivity"
+              android:name="com.google.android.gms.maps.SupportMapFragment">
+    </fragment>
+
+    <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listoffiles"
+            android:background="@color/listbackground"
+            android:textColor="#FFFFFF"
+            android:divider="#FFFFFF"
+            android:dividerHeight="2px"
+            android:layout_alignParentBottom="true" android:layout_alignParentStart="true"/>
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/floating_load_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@android:drawable/ic_media_play"/>
-</fragment>
+            android:src="@android:drawable/ic_media_play" android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin" android:layout_marginBottom="15dp"
+            android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"/>
+</RelativeLayout>
+
 

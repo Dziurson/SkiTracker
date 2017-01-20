@@ -7,7 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,37 +29,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private FloatingActionButton load_button;
+    private ListView file_list;
     private ArrayList<String> filenames;
+    private ArrayAdapter<String> adapter;
+    private File path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         initialize();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-        addLine("test.kml");
     }
 
     private void initialize()
     {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         load_button = (FloatingActionButton) findViewById(R.id.floating_load_button);
+        filenames = new ArrayList<>();
+        adapter = new ArrayAdapter<String>(this, R.layout.custom_textview, filenames);
+        file_list = (ListView) findViewById(R.id.listoffiles);
+        file_list.setAdapter(adapter);
+        file_list.setVisibility(View.GONE);
         load_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                //TODO: Make scrolling listview of saved kml files.
-                Snackbar.make(view, "TODO: Show list of kml filse", Snackbar.LENGTH_LONG);
+                File[] files = path.listFiles();
+                filenames.clear();
+                for(File f : files)
+                {
+                    if (f.getName().matches(".*\\.kml$"))
+                        filenames.add(f.getName());
+                }
+                adapter.notifyDataSetChanged();
+                file_list.setVisibility(View.VISIBLE);
+                load_button.setVisibility(View.GONE);
+            }
+        });
+        file_list.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                String item_name = (String) file_list.getItemAtPosition(i);
+                addLine(item_name);
+                file_list.setVisibility(View.GONE);
+                load_button.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -81,7 +107,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void addLine(String filename)
     {
-        //throw new NotImplementedException();
         try
         {
             File kmlFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
