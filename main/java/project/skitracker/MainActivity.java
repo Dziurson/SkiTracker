@@ -26,27 +26,44 @@ import java.util.Calendar;
 
 import static java.lang.Math.round;
 
-//Minimalna wersja: Android 4.4, dodane wsparcie dla Androida 6.0
-//TODO: DODAC PROSBE O WLACZENIE GPS PRZY STARCIE APLIKACJI
-//TODO: DODAC MOZLIWOSC WYSWIETLENIA LITY PLIKOW KML NA TELEFONIE
+/**
+ * Główna klasa aplikacji odpowiadająca za wyświetlanie parametrów, wywoływanie kluczowych obiektów oraz do uruchamiania innych aktywności.
+ * Najniższa obsługiwana wersja OS: Android 4.4, posiada wsparcie dla dynamicznych uprawnień Android 6.0+.
+ */
 public class MainActivity extends AppCompatActivity
 {
-    //This Object implements LocationListener and SensorListener Interfaces. Provides GPS and Accelerometer data.
+    /**
+     * Obiekt udostepniający kolejne aktualizacje GPS, i wywołujący aktualizację widku.
+     */
     GPSDataProvider movement_tracker;
-    //Fields that represents movement data (velocity, acceleration, longitude, latitude).
+    /**
+     * Pola odpowiadające miejscom do wyświetlania aktualnych parametrów z widoku.
+     */
     private TextView szerokosc_textview, dlugosc_textview, predkosc_textview, acceleration_textview;
-    //Progressbars graphically shows velocity and acceleration
+    /**
+     * Pola odpowiadające paskom postępu prędkości i przyspieszenia z widoku.
+     */
     private ProgressBar velocity_bar, acceleration_bar;
-    //Small button turns on/off recording
+    /**
+     * Pole odpowiadające przyciskowi do zapisywania z widoku.
+     */
     private FloatingActionButton recording_button;
-    //Two kml file providers - one for raw data, one for interpolated data
+    /**
+     * Obiekty odpowiadające za zapis do plików .kml.
+     */
     private KMLFileProvider kml_raw_file_provider, kml_interpolated_file_generator;
-    //Two data formatters, one for Longitude and Latitude, second for Velocity and Acceleration.
+    /**
+     * Formattery służące do poprawnego wyświetlania wyników, z zadaną dokładnością.
+     */
     private DecimalFormat coordinates_format, av_format;
-    //Date provider - used for kml filename.
+    /**
+     * Aktualny czas używany przy tworzeniu nazwy plików .kml.
+     */
     private Calendar calendar;
 
-    //This method is invoked while application is starting.
+    /**
+     * Funkcja która zostaje wywoływana przy starcie aplikacji.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -66,8 +83,8 @@ public class MainActivity extends AppCompatActivity
                     if (!Properties.is_kml_file_opened)
                     {
                         calendar = Calendar.getInstance();
-                        String filename = calendar.getTime().toString() + calendar.getTimeInMillis() + ".kml";
-                        String filename_filtered = calendar.getTime().toString() + calendar.getTimeInMillis() + "filtered.kml";
+                        String filename = calendar.getTime().toString() + ".kml";
+                        String filename_filtered = calendar.getTime().toString() + "filtered.kml";
                         if (kml_raw_file_provider.openFile(filename))
                         {
                             if (kml_interpolated_file_generator.openFile(filename_filtered))
@@ -93,7 +110,10 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    //Runtime permission for writing in public directories handler. Returns true if permission is granted
+    /**
+     * Funkcja używana do sprawdzenia czy aplikacja posiada uprawnienia do zapisu w pamięci telefonu.
+     * @return Zwraca wartość true jeśli uprawnienia są przyznane. Jeśli aplikacja nie posiada uprawnień zwracana jest wartość false.
+     */
     private boolean checkForWriteExternalPermission()
     {
         //Check if android version is lower than 6.0, if it is, permissions are granted on install and there is no need to requesting them on runtime.
@@ -111,14 +131,19 @@ public class MainActivity extends AppCompatActivity
         return Properties.external_storage_write_permission_granted;
     }
 
-    //Simple method for changing Icon style while recording is on/off.
+    /**
+     * Funkcja zmieniajaca wygląd przycisku w prawym dolnym rogu ekranu, w zależości od tego czy zapis do pliku jest włączony czy nie
+     * @param b Jesli przekazany zostanie parametr true, przycisk zmieni wygląd na strzałkę, jeśli false, na krzyżyk.
+     */
     private void changeFabStyle(boolean b)
     {
         if (b) recording_button.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         else recording_button.setImageResource(android.R.drawable.ic_media_play);
     }
 
-    //initialize method is responsible for initialization of all MainActivity fields.
+    /**
+     * Funkcja inicjalizująca wartości pól, na podstawie elementów pobranych z widoku, oraz inicjalizacja podstawowych obiektów
+     */
     private void initialize()
     {
         kml_raw_file_provider = new KMLFileProvider(this);
@@ -135,8 +160,13 @@ public class MainActivity extends AppCompatActivity
         av_format = new DecimalFormat(getResources().getString(R.string.acceleration_and_velocity_format));
         movement_tracker = GPSDataProvider.getInstance(this);
     }
-
-    //Function used to update all available fields in MainActivity.
+    /**
+     * Funkcja, używana do aktualizacji wartości pól w MainActivity
+     * @param v Nowa wartość prędkości w m/s
+     * @param a Nowa wartość przyspieszenia w m/s^2
+     * @param szer Nowa wartość szerokości geograficznej
+     * @param dlug Nowa wartość długości geograficznej
+     */
     public synchronized void updateTextViews(double v, double a, double szer, double dlug)
     {
         updateSingleTextView(szerokosc_textview, coordinates_format.format(szer).toString());
@@ -149,24 +179,41 @@ public class MainActivity extends AppCompatActivity
             kml_raw_file_provider.addCoordinates(dlug + "," + szer + " <!-- v = " + v * 3.6 + ", a = " + a + "-->");
     }
 
-    //Saving array of strings to kml_interpolated_file_generator file
+    /**
+     * Funkcja używana do zapisywania tablicy typu String do pliku .kml z interpolowanymi wartościami współrzędnych geograficznych.
+     * @param str Tablica stringów w postaci "Double,Double"
+     */
     public synchronized void saveLocationDataArrayToInterpolatedKmlFile(ArrayList<String> str)
     {
         if (Properties.is_kml_file_opened) kml_interpolated_file_generator.addAllCoordinates(str);
     }
 
-    // Function used to fill data from Accelerometer.
+    /**
+     * Funkcja używana do aktualizacji wartości przyspieszenia
+     * @param a wartość przyspieszenia w m/s^2
+     */
+    @Deprecated
     public synchronized void Update_Acceleration_Field(double a)
     {
         String acc_text = av_format.format(a).toString() + " m/s^2";
         acceleration_textview.setText(acc_text);
     }
 
+    /**
+     * Funkcja używana do aktualizacji pola t wartością s
+     * @param t Pole, które ma być zaktualizowane
+     * @param s String z wartością jaka ma znaleźć się w polu
+     */
     private void updateSingleTextView(TextView t, String s)
     {
         t.setText(s);
     }
 
+    /**
+     * Funkcja używana do aktualizacji pasków postępu (graficzne przedstawienie prędkości i przyspieszenia)
+     * @param b ProgressBar który ma być zaktualizowany
+     * @param v Wartość, która ma być przypisana do ProgressBar
+     */
     private void updateProgressBar(ProgressBar b, double v)
     {
         if (v > b.getMax()) b.setProgress(b.getMax());
@@ -181,6 +228,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Funkcja, która otwiera menu, umożliwia przejście do menu ustawień i map.
+     * @param item Obiekt z listy, który został wybrany
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -204,6 +255,12 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Funkcja odpowiadająca za przydzielanie uprawnien w aplikacji kiedy zajdzie taka potrzeba - Android 6.0+
+     * @param requestcode Indywidualny kod dla przekazanej listy uprawnień
+     * @param permissions Lista uprawnień, które mają zostać przydzielone
+     * @param grantResults Lista wynikowa (czy użytkownik przydzielił wymagane uprawnienia)
+     */
     @Override
     public void onRequestPermissionsResult(int requestcode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -236,11 +293,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Funkcja sprawdza czy przydzielone zostały uprawnienia GPS
+     * @return Zwraca wartość czy przydzielone zostały uprawnienia do aktualizacji GPS
+     */
     public boolean getGPSPermission()
     {
         return Properties.gps_permission_granted;
     }
 
+    /**
+     * Funkcja ustawia uprawnienia GPS
+     * @param b Zależy od tego, czy użytkownik przydzielił uprawnienia GPS
+     */
     public void setGPSPermission(boolean b)
     {
         Properties.gps_permission_granted = b;

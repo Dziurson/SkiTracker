@@ -11,18 +11,52 @@ import project.skitracker.listeners.OnFocusChangeCustomListener;
 import project.skitracker.listeners.OnSeekBarChangeCustomListener;
 import project.skitracker.settings.Properties;
 
+/**
+ * Klasa odpowiadająca za dostosowywanie parametrów aplikacji
+ */
 public class SettingsActivity extends AppCompatActivity
 {
+    /**
+     * Pole odpowiadające miejscu na wpisanie dystansu między aktualizacjami.
+     */
     private EditText update_interval_field;
+    /**
+     * Pole odpowiadające miejscu na wpisanie czasu między aktualizacjami.
+     */
     private EditText update_delay_field;
+    /**
+     * Pole odpowiadające miejscu na wpisanie wartości sigma filtracji Kalmana.
+     */
     private EditText sigma_value_field;
+    /**
+     * Pole odpowiadające miejscu na wpisanie wartosci ro filtracji Kalmana.
+     */
     private EditText ro_value_field;
+    /**
+     * Pole odpowiadające przełącznikowi Filtracji kalmana (on/off)
+     */
     private Switch kalman_filtration_switch;
+    /**
+     * Pole odpowiadające paskowi do wyboru dystansu między aktualizacjami
+     */
     private SeekBar update_interval_bar;
+    /**
+     * Pole odpowiadające paskowi do wyboru czasu między aktualizacjami
+     */
     private SeekBar update_delay_bar;
+    /**
+     * Pole odpowiadające paskowi do wyboru wartości sigma filtracji Kalmana
+     */
     private SeekBar sigma_value_bar;
+    /**
+     * Pole odpowiadające paskowi do wyboru wartości ro filtracji Kalmana
+     */
     private SeekBar ro_value_bar;
 
+    /**
+     * Funcka uruchamiana przy otwarciu aktywności, inicjalizująca podstawowe parametry.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -35,6 +69,9 @@ public class SettingsActivity extends AppCompatActivity
         enableListeners();
     }
 
+    /**
+     * Funkcja inicjalizująca pola klasy wartościami uzyskanym na podstawie widoku
+     */
     private void initialize()
     {
         update_interval_field = (EditText) findViewById(R.id.update_interval_field);
@@ -57,6 +94,9 @@ public class SettingsActivity extends AppCompatActivity
         update_delay_bar.setProgress(Properties.minTimeBetweenGPSUpdates / 1000);
     }
 
+    /**
+     * Funkcja aktywująca EventListenery dla pól i pasków, w wyniku czego zostają zmieniane wartości w klasie Propeties.
+     */
     private void enableListeners()
     {
         update_interval_bar.setOnSeekBarChangeListener(new OnSeekBarChangeCustomListener(update_interval_field, "minDistanceBetweenGPSUpdates", Integer.TYPE, 1, this));

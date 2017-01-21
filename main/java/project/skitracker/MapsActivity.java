@@ -4,14 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.*;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -24,16 +20,39 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Klasa odpowiadająca za wyświetlanie zapisanych tras w mapach Google.
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 {
-
+    /**
+     * Obiekt map Google
+     */
     private GoogleMap mMap;
+    /**
+     * Pole odpowiadające za przycisk otwierania plików.
+     */
     private FloatingActionButton load_button;
+    /**
+     * Pole odpowiadające za wyświetlanie listy plików z widoku.
+     */
     private ListView file_list;
+    /**
+     * Lista zawierająca nazwy plików z rozszerzeniem .kml
+     */
     private ArrayList<String> filenames;
+    /**
+     * Adapter używany do aktualizacji wyświetlanej listy plików
+     */
     private ArrayAdapter<String> adapter;
+    /**
+     * Scieżka do katalogu, w którym znajdują się pliki .kml.
+     */
     private File path;
 
+    /**
+     * Funkcja która zostaje wywoływana przy starcie aktywności.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -43,12 +62,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Funckja oczekująca na dostępność map Google
+     */
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
     }
 
+    /**
+     * Funkcja inicjalizująca pola klasy, oraz dodająca podstawowe EventListenery do elementów widoku.
+     */
     private void initialize()
     {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -90,21 +115,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    public void addLine(ArrayList<String> location_points_list, String label) throws NotImplementedException
-    {
-        throw new NotImplementedException();
-    }
-
-    public void addLineFromStrings(ArrayList<String> location_latitude_list, ArrayList<String> location_longitude_list, String label) throws NotImplementedException
-    {
-        throw new NotImplementedException();
-    }
-
-    public void addLineFromDoubles(ArrayList<Double> location_latitude_list, ArrayList<Double> location_longitude_list, String label) throws NotImplementedException
-    {
-        throw new NotImplementedException();
-    }
-
+    /**
+     * Funkcja dodająca trasę na mapy google, znajdującą się w pliku kml o podanej jako parametr nazwie.
+     * @param filename Nazwa pliku .kml z trasą.
+     */
     public void addLine(String filename)
     {
         try
@@ -133,8 +147,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             PolylineOptions points = new PolylineOptions().addAll(point_list).width(5).color(Color.RED).visible(true);
             mMap.addMarker(new MarkerOptions().position(point_list.get(1)).title("START"));
             mMap.addPolyline(points);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(point_list.get(1)));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             bread.close();
             fread.close();
+
         }
         catch (Exception e)
         {
@@ -142,14 +159,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void moveCamera(double latitude, double longitude)
-    {
-        if (mMap != null)
-        {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
-        }
-    }
-
+    /**
+     * Funkcja dodająca znacznik na mapie
+     * @param latitude Szerokość geograficzna
+     * @param longitude Długość geograficzna
+     * @param label Etykieta znacznika
+     * @throws NotImplementedException
+     */
     public void addPlacemark(double latitude, double longitude, String label) throws NotImplementedException
     {
         if (mMap != null)
@@ -158,6 +174,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Funkcja czyszcząca wszystkie trasy i znaczniki z mapy.
+     */
     public void clearMap()
     {
         if (mMap != null)
