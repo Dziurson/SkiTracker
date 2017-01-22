@@ -62,17 +62,28 @@ public class MainActivity extends AppCompatActivity
     private Calendar calendar;
 
     /**
-     * Funkcja która zostaje wywoływana przy starcie aplikacji.
+     * Funkcja która zostaje wywoływana przy starcie aplikacji (po jej wyłączeniu)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+    }
+
+    /**
+     * Funkcja wywoływana przy starcie aktywności
+     */
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        //Przypisanie widoku do aktywności
         setContentView(R.layout.activity_main);
+        //Inicjalizacja pól
         initialize();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        //Dodanie EventListenera do przycisku zapisywania
         recording_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -82,6 +93,14 @@ public class MainActivity extends AppCompatActivity
                 {
                     if (!Properties.is_kml_file_opened)
                     {
+                        /*
+                            Jeśli pliki kml nie są otwarte to następuje próba utworzenia nowych plików
+                            na podstawie aktualnego czasu. W razie niepowodzenia użytkownik zostaje o tym
+                            powiadomiony poprzez pojawiającą się na ekranie informację.
+
+                            Po poprawnym utworzeniu plików następuje rozpoczęcie zapisu do plików
+                            oraz zmiana wyglądu przycisku nagrywania.
+                         */
                         calendar = Calendar.getInstance();
                         String filename = calendar.getTime().toString() + ".kml";
                         String filename_filtered = calendar.getTime().toString() + "filtered.kml";
@@ -148,7 +167,6 @@ public class MainActivity extends AppCompatActivity
     {
         kml_raw_file_provider = new KMLFileProvider(this);
         kml_interpolated_file_generator = new KMLFileProvider(this);
-        //Initializing fields with data from view.
         velocity_bar = (ProgressBar) findViewById(R.id.velocitybar);
         acceleration_bar = (ProgressBar) findViewById(R.id.acceleration_bar);
         szerokosc_textview = (TextView) findViewById(R.id.szerokosc_view_t);
@@ -159,6 +177,7 @@ public class MainActivity extends AppCompatActivity
         coordinates_format = new DecimalFormat(getResources().getString(R.string.coordinates_format));
         av_format = new DecimalFormat(getResources().getString(R.string.acceleration_and_velocity_format));
         movement_tracker = GPSDataProvider.getInstance(this);
+        movement_tracker.setNewMainActivity(this);
     }
     /**
      * Funkcja, używana do aktualizacji wartości pól w MainActivity

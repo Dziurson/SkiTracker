@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 
-/*
+/**
     GPSDataProvider, using only GPS signal.
     This class can only be created once, as it is working as a LocationListener service.
     This service is listening to GPS updates.
@@ -118,7 +118,7 @@ public class GPSDataProvider implements LocationListener
             sender.updateTextViews(getVelocity(), getAcceleration(), getLatitude(), getLongitude());
             if (checkForValuesChange())
             {
-                disableGPSRequests();
+                //disableGPSRequests();
                 enableGPSRequests();
             }
         }
@@ -226,5 +226,10 @@ public class GPSDataProvider implements LocationListener
     private boolean checkForValuesChange()
     {
         return !(current_interval == Properties.minDistanceBetweenGPSUpdates) || (current_time == Properties.minTimeBetweenGPSUpdates);
+    }
+
+    public void setNewMainActivity(MainActivity activity)
+    {
+        this.sender = activity;
     }
 }
