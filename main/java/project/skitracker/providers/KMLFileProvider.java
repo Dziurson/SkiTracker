@@ -9,8 +9,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+/**
+ * Klasa odpowiedzialna za tworzenie plików KML
+ */
 public class KMLFileProvider
 {
+    @Deprecated
     private MainActivity mainActivity;
     private File kmlFile;
     private FileWriter fout;
@@ -25,7 +29,12 @@ public class KMLFileProvider
         mainActivity = sender;
     }
 
-    public boolean openFile(String filename) //TODO: Modify section LookAt
+    /**
+     * Metoda tworzy nowy plik, jeśli taki nie istnieje. Nazwa przekazywana do metody powinna byc unikalna!
+     * @param filename Nazwa pliku
+     * @return
+     */
+    public boolean openFile(String filename)
     {
         try
         {
@@ -56,6 +65,11 @@ public class KMLFileProvider
         }
     }
 
+    /**
+     * Metoda zapisująca do pliku jedne współrzędne
+     * @param s String postaci (Dlugosc,Szerokosc)
+     * @return Zwraca true jesli zapis się powiódł
+     */
     public synchronized boolean addCoordinates(String s)
     {
         try
@@ -69,6 +83,11 @@ public class KMLFileProvider
         }
     }
 
+    /**
+     * Metoda zapisująca do pliku liste współrzędnych
+     * @param list Lista stringow postaci (Dlugosc,Szerokosc)
+     * @return Zwraca true jesli zapis się powiódł
+     */
     public synchronized void addAllCoordinates(ArrayList<String> list)
     {
         if (list != null)
@@ -80,6 +99,10 @@ public class KMLFileProvider
         }
     }
 
+    /**
+     * Metoda służy do zamknięcia pliku
+     * @return Zwraca true jesli zapis się powiódł
+     */
     public boolean closeFile()
     {
         Properties.is_kml_file_opened = false;
@@ -98,10 +121,5 @@ public class KMLFileProvider
         {
             return false;
         }
-    }
-
-    public void setPlacemarkName(String name) throws NotImplementedException
-    {
-        throw new NotImplementedException();
     }
 }

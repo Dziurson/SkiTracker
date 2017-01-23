@@ -4,14 +4,28 @@ import java.util.ArrayList;
 
 import static java.lang.Math.pow;
 
-//Spline interpolation uses 4 points, returns spline between point 2 and 3 ie. for points [0 1 1 0] it will return spline between 1 and 1.
-//Interpolating only ONE DIMENSION! It needs to be used once for Longtitude and once for latitude;
+/**
+ * Klasa odpowiedzialna za dostarczenie punktów interpolacji, uzyskanych zmodyfikowaną metodą interpolacji
+ * funkcjami sklejanymi 3 stopnia.
+ */
 public class SplineInterpolation
 {
+    /**
+     * Ilość punktów które mają zostać wygenerowane przez interpolację w jednym kroku
+     */
     private static final int element_count = 10;
+    /**
+     * Wartości czterech interpolowanych punktów
+     */
     private ArrayList<Double> values;
+    /**
+     * Kolejno: pochodna w pierszym punkcie, pochodna w drugim punkcie, wektor wspolczynnikow d, wektor wspolczynnikow a, krok interpolacji
+     */
     private double m1, m2, d[], a[], step;
 
+    /**
+     * Konstruktor klasy wypełnia początkowe wektory zerami.
+     */
     public SplineInterpolation()
     {
         values = new ArrayList<>();
@@ -21,16 +35,30 @@ public class SplineInterpolation
         a = new double[4];
     }
 
+    /**
+     * Zwraca ostatnio dodana wartosc
+     * @return
+     */
     public double getFirst()
     {
         return values.get(0);
     }
 
+    /**
+     * Zwraca czwartą z kolei dodana wartość
+     * @return
+     */
     public double getLast()
     {
         return values.get(3);
     }
 
+    /**
+     * Po dodaniu wartości wywolywana jest ta metoda - wartości są kolejkowane, pierwsza jest
+     * zdejmowana z kolejki, kolejne są przesuwane, a nowa dodawana na koniec kolejki.
+     * @param d Wartość do dodania
+     * @return
+     */
     private double moveValues(double d)
     {
         double tmp = getFirst();
@@ -41,11 +69,20 @@ public class SplineInterpolation
         return tmp;
     }
 
+    /**
+     * Dodaje wartość do zbioru wartości
+     * @param d Wartość do dodania
+     */
     private void AddValue(double d)
     {
         moveValues(d);
     }
 
+    /**
+     * Metoda oblicza punkty interpolacji po dodaniu do niej nowej wartości
+     * @param d Wartość do dodania
+     * @return
+     */
     public ArrayList<Double> calculateNewSpline(double d)
     {
         AddValue(d);
@@ -53,6 +90,10 @@ public class SplineInterpolation
         else return null;
     }
 
+    /**
+     * Metoda służąca do wykonania obliczeń. Pochodne zostały policzone analitycznie i podstawione do wzoru.
+     * @return Lista wartości wygenerowanych przez interpolację.
+     */
     private ArrayList<Double> calculate()
     {
         for (int i = 0; i < 3; i++)

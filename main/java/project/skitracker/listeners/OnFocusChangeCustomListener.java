@@ -10,6 +10,9 @@ import project.skitracker.settings.Properties;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
+/**
+ * System obsługi zdarzeń przy zmianie wartości pól aktywności Setting
+ */
 public class OnFocusChangeCustomListener implements View.OnFocusChangeListener
 {
     private SeekBar bar;
@@ -19,6 +22,15 @@ public class OnFocusChangeCustomListener implements View.OnFocusChangeListener
     private TextView field;
     private double coeff;
 
+    /**
+     * Konstruktor listenera
+     * @param field Dowolne pole dziedziczące po TextView, do którego zostaje przypięty Listener
+     * @param bar Pasek, którego wartość ma ulegać zmianie po wpisaniu wartości do pola TextView
+     * @param fieldname Nazwa pola w klasie Propeties które ma zostać zmodyfikowane
+     * @param typ Typ pola w plasie propeties, które ma zostać zmodyfikowane
+     * @param coeff Współczynnik wartości (np jezeli operujemy na danych rzędu 10^-3 - 10^-4, współczynnik powinien wynoscć 10^-4
+     * @param settingsActivity Aktywność ustawienia, w której znajdują się pola.
+     */
     public OnFocusChangeCustomListener(TextView field, SeekBar bar, String fieldname, Type typ, double coeff, SettingsActivity settingsActivity)
     {
         try
@@ -36,6 +48,11 @@ public class OnFocusChangeCustomListener implements View.OnFocusChangeListener
         this.field = field;
     }
 
+    /**
+     * Metoda wywoływana podczas zakończenia wprowadzania zmian
+     * @param view aktualny widok
+     * @param has_focus aktualna wartość czy użytkownik zakończył wprowadzanie zmian
+     */
     @Override
     public void onFocusChange(View view, boolean has_focus)
     {

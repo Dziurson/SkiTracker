@@ -19,12 +19,11 @@ import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 
+//TODO: dodac obserwatora dla wiekszej elastycznosci
 /**
-    GPSDataProvider, using only GPS signal.
-    This class can only be created once, as it is working as a LocationListener service.
-    This service is listening to GPS updates.
-*/
-
+ * Klasa odpowiedzialna za nasluchiwanie aktualizacji GPS oraz aktualizację pol glownej aktywnosci.
+ * Moze byc tylko jedna instancja klasy.
+ */
 public class GPSDataProvider implements LocationListener
 {
     private static GPSDataProvider instance = null;
@@ -42,6 +41,10 @@ public class GPSDataProvider implements LocationListener
     private double current_time;
     private double current_interval;
 
+    /**
+     * Konstruktor przyjmuje jako argument pierwszy obiekt aktywności który będzie tworzył instancję tej klasy.
+     * @param sender Aktywność wywołująca konstruktor.
+     */
     private GPSDataProvider(MainActivity sender)
     {
         this.sender = sender;
@@ -55,12 +58,22 @@ public class GPSDataProvider implements LocationListener
         enableGPSRequests();
     }
 
+    /**
+     * Zwraca instancję klasy
+     * @param sender Nowa aktywność - rola obserwatora
+     * @return
+     */
     public static GPSDataProvider getInstance(MainActivity sender)
     {
         if (instance == null) instance = new GPSDataProvider(sender);
         return instance;
     }
 
+    /**
+     * Metoda wywoływana podczas otrzymania nowej lokalizacji. Wywołuje metody aktualizacji pól w glownej aktywnosci oraz
+     * jest odpowiedzialna za filtrację i interpolację danych.
+     * @param location Otrzymana lokalizacja.
+     */
     @Override
     public void onLocationChanged(Location location)
     {
@@ -141,6 +154,9 @@ public class GPSDataProvider implements LocationListener
 
     }
 
+    /**
+     * Metoda włączająca aktualizacje GPS i sprawdzająca czy przyznane są uprawnienia do otrzymywania lokalizacji.
+     */
     public void enableGPSRequests()
     {
         if (!(location_manager == null))
@@ -163,6 +179,9 @@ public class GPSDataProvider implements LocationListener
         }
     }
 
+    /**
+     * Metoda wyłączająca dostęp do lokalizacji GPS.
+     */
     public void disableGPSRequests()
     {
         if (!(location_manager == null))
@@ -184,6 +203,10 @@ public class GPSDataProvider implements LocationListener
         }
     }
 
+    /**
+     * Metoda służąca do wyliczenia prędkości na podstawie dwóch punktów i różnicy czasu.
+     * @return Prędkość w m/s
+     */
     private double calculateVelocity()
     {
         if ((location_data != null) && (location_data_prev != null))
@@ -193,11 +216,18 @@ public class GPSDataProvider implements LocationListener
         else return 0;
     }
 
+    /**
+     * Metoda służąca do obliczenia przyspieszenia na podstawie czterech punktów, oraz czasu
+     * @return Przyspieszenie w m/s^2
+     */
     private double calculateAcceleration()
     {
         return (velocity.getVelocity() - velocity_prev.getVelocity()) / ((velocity.getTime() - velocity_prev.getTime()) / 1000);
     }
 
+    /*
+        Gettery i settery do pól klasy
+     */
     public double getVelocityInKPH()
     {
         return velocity.getVelocityInKph();
@@ -223,11 +253,19 @@ public class GPSDataProvider implements LocationListener
         return this.location_data.getLatitude();
     }
 
+    /**
+     * Metoda sprawdzająca czy zmieniły się wartości w klasie Propeties
+     * @return
+     */
     private boolean checkForValuesChange()
     {
         return !(current_interval == Properties.minDistanceBetweenGPSUpdates) || (current_time == Properties.minTimeBetweenGPSUpdates);
     }
 
+    /**
+     * Metoda służąca do zmiany obserwatora.
+     * @param activity nowa aktywność obserwująca.
+     */
     public void setNewMainActivity(MainActivity activity)
     {
         this.sender = activity;
